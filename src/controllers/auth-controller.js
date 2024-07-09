@@ -85,5 +85,6 @@ exports.login = async (req, res, next) => {
 }
 
 exports.me = async (req, res, next) => {
+    console.log(req.user)
     res.json(req.user);
 }
