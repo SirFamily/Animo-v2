@@ -1,21 +1,13 @@
 const prisma = require("../config/pirsma");
 
-exports.createUser = (userId, email, hashedPassword) => {
+exports.createUser = async (userData) => {
+    return await prisma.user.create({
+        data: userData
+    });
+};
 
-    return prisma.user.create({
-        data: {
-            id: userId,
-            email,
-            password: hashedPassword,
-        }
-
-    })
-}
-
-exports.getUserByEmail = (email) => {
-    return prisma.user.findFirst({
-        where: {
-            email: email
-        }
-    })
-}
+exports.getUserByEmail = async (email) => {
+    return await prisma.user.findUnique({
+        where: { email }
+    });
+};

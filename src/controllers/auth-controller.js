@@ -3,51 +3,79 @@ const bcrypt = require('bcrypt');
 const userService = require("../service/userService");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
+const cloudUpload = require("../utils/cloudUpload")
 
 exports.register = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+      console.log('Request Body:', req.body);
+  
+      const {
+        firstName, lastName, email, password, phone, birthday,
+        address, subDistrict, district, province, postalCode, bio
+      } = req.body;
+  
+      console.log('Email:', email);
+      console.log('Password:', password);
+  
+      if (!email || !password) {
+        throw createError(400, 'Email and password are required');
+      }
 
-        console.log('Email:', email);
-        console.log('Password:', password);
-
-        if (!email || !password) {
-            throw createError(400, 'Email and password are required');
+      let img = '';
+        if (req.file) {
+            img = await cloudUpload(req.file.path);
         }
-
-        const userExist = await userService.getUserByEmail(email);
-        if (userExist) {
-            throw createError(409, 'Email already in use');
-        }
-
-        const userId = uuidv4().replace(/-/g, '');
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        await userService.createUser(userId, email, hashedPassword);
-
-        res.status(201).json({ message: "Register success" });
+  
+      const userExist = await userService.getUserByEmail(email);
+      if (userExist) {
+        throw createError(409, 'Email already in use');
+      }
+  
+      const userId = uuidv4().replace(/-/g, '');
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+    //   await userService.createUser({
+    //     id: userId,
+    //     firstName,
+    //     lastName,
+    //     email,
+    //     password: hashedPassword,
+    //     phone,
+    //     birthday,
+    //     address,
+    //     subDistrict,
+    //     district,
+    //     province,
+    //     postalCode,
+    //     bio,
+    //     img,
+    //     // createdAt: new Date()
+    //   });
+  
+      res.status(201).json({ message: "Register success" });
     } catch (err) {
-        next(err);
+      next(err);
     }
-};
+  };
+  
 
 exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        const userExist = await userService.getUserByEmail(email)
+        const userExist = await userService.getUserByEmail(email);
 
         if (!userExist) {
-            throw createError(401, "Authentication failed! Wrong email or password")
+            throw createError(401, "Authentication failed! Wrong email or password");
         }
 
         const isMatch = await bcrypt.compare(password, userExist.password);
 
         if (!isMatch) {
-            throw createError(401, "Invalid Password")
+            throw createError(401, "Invalid Password");
         }
 
-        const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY, { expiresIn: process.env.EXPIRES_IN })
+        const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY, { expiresIn: process.env.EXPIRES_IN });
         res.status(200).json({ message: "login success", token: token });
     } catch (err) {
         next(err);
@@ -55,5 +83,5 @@ exports.login = async (req, res, next) => {
 }
 
 exports.me = async (req, res, next) => {
-    res.json(req.user)
+    res.json(req.user);
 }
