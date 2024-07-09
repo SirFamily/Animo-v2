@@ -3,61 +3,63 @@ const bcrypt = require('bcrypt');
 const userService = require("../service/userService");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const cloudUpload = require("../utils/cloudUpload")
+const cloudUpload = require("../utils/cloudUpload");
 
 exports.register = async (req, res, next) => {
     try {
-      console.log('Request Body:', req.body);
-  
-      const {
-        firstName, lastName, email, password, phone, birthday,
-        address, subDistrict, district, province, postalCode, bio
-      } = req.body;
-  
-      console.log('Email:', email);
-      console.log('Password:', password);
-  
-      if (!email || !password) {
-        throw createError(400, 'Email and password are required');
-      }
+        console.log('Request Body:', req.body);
 
-      let img = '';
+        const {
+            firstName, lastName, email, password, phone, birthday,
+            address, subDistrict, district, province, postalCode, bio
+        } = req.body;
+
+        console.log('Email:', email);
+        console.log('Password:', password);
+
+        if (!email || !password) {
+            throw createError(400, 'Email and password are required');
+        }
+
+        let img = '';
         if (req.file) {
             img = await cloudUpload(req.file.path);
         }
-  
-      const userExist = await userService.getUserByEmail(email);
-      if (userExist) {
-        throw createError(409, 'Email already in use');
-      }
-  
-      const userId = uuidv4().replace(/-/g, '');
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-    //   await userService.createUser({
-    //     id: userId,
-    //     firstName,
-    //     lastName,
-    //     email,
-    //     password: hashedPassword,
-    //     phone,
-    //     birthday,
-    //     address,
-    //     subDistrict,
-    //     district,
-    //     province,
-    //     postalCode,
-    //     bio,
-    //     img,
-    //     // createdAt: new Date()
-    //   });
-  
-      res.status(201).json({ message: "Register success" });
+
+        const userExist = await userService.getUserByEmail(email);
+        if (userExist) {
+            throw createError(409, 'Email already in use');
+        }
+
+        const userId = uuidv4().replace(/-/g, '');
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Convert birthday string to Date object if it's provided
+        const formattedBirthday = birthday ? new Date(birthday) : null;
+
+        await userService.createUser({
+            id: userId,
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            phone,
+            birthday: formattedBirthday,
+            address,
+            subDistrict,
+            district,
+            province,
+            postalCode,
+            bio,
+            img,
+        });
+
+        res.status(201).json({ message: "Register success" });
     } catch (err) {
-      next(err);
+        next(err);
     }
-  };
-  
+};
+
 
 exports.login = async (req, res, next) => {
     try {
