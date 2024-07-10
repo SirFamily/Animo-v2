@@ -14,21 +14,41 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  firstName    String   @map("first_name")
-  lastName     String   @map("last_name")
-  email        String   @unique
-  password     String
-  phone        String
-  birthday     DateTime?
-  address      String?
-  subDistrict  String?  @map("sub_district")
-  district     String?
-  province     String?
-  postalCode   String?  @map("postal_code")
-  bio          String?
-  img          String?
-  createdAt    DateTime @default(now()) @map("created_at")
+  id          String    @id @default(uuid())
+  firstName   String    @map("first_name")
+  lastName    String    @map("last_name")
+  email       String    @unique
+  password    String
+  phone       String
+  birthday    DateTime?
+  address     String?
+  subDistrict String?   @map("sub_district")
+  district    String?
+  province    String?
+  postalCode  String?   @map("postal_code")
+  bio         String?
+  img         String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  pet         Pet[]
 
   @@map("users")
+}
+
+model Pet {
+  id         String    @id @default(uuid())
+  petName    String    @map("pet_name")
+  animalType String    @map("animal_type")
+  breed      String?
+  weight     Float?
+  height     Float?
+  gender     String?
+  birthday   DateTime?
+  url        String?
+  petHistory String?   @map("pet_history")
+  userId     String    @map("user_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("pets")
 }
