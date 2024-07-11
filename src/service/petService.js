@@ -5,3 +5,9 @@ exports.newpets = async (petData) => {
         data: petData,
     });
 };
+
+exports.listpets = async (userId) => {
+    return prisma.pet.findMany({
+        where: userId, 
+    });
+};

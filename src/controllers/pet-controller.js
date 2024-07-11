@@ -4,23 +4,23 @@ const petService = require("../service/petService");
 
 exports.newpet = async (req, res, next) => {
     try {
-    const {
-        petName,
-        animalType,
-        breed,
-        weight,
-        height,
-        gender,
-        birthday,
-        petHistory,
-    } = req.body;
-    const { uid } = req.params;
+        const {
+            petName,
+            animalType,
+            breed,
+            weight,
+            height,
+            gender,
+            birthday,
+            petHistory,
+        } = req.body;
+        const { uid } = req.params;
 
-    if (!petName || !animalType || !uid) {
-        return next(createError(400, 'Pet name, animal type, and user ID are required.'));
-    }
+        if (!petName || !animalType || !uid) {
+            return next(createError(400, 'Pet name, animal type, and user ID are required.'));
+        }
 
-    let url = '';
+        let url = '';
         if (req.file) {
             url = await cloudUpload(req.file.path);
         }
@@ -36,13 +36,28 @@ exports.newpet = async (req, res, next) => {
             petHistory,
             userId: uid,
         };
-console.log(req.body)
-    
+        console.log(req.body)
+
         await petService.newpets(petData);
         res.status(201).json({
             status: 'success',
         });
     } catch (err) {
         next(err)
+    }
+};
+
+
+exports.listpet = async (req, res, next) => {
+    const { uid } = req.params;
+    try {
+        const data = await petService.listpets({ userId: uid });
+
+        res.status(200).json({
+            status: 'success',
+            data,
+        });
+    } catch (err) {
+        next(err);
     }
 };
