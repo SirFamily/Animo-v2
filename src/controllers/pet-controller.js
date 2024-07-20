@@ -54,13 +54,18 @@ exports.newpet = async (req, res, next) => {
 exports.listpet = async (req, res, next) => {
     try {
         const { uid } = req.params;
-        const data = await petService.listpets(uid);  // Pass uid directly here
-        console.log(data);
+        const data = await petService.listpets(uid);
+        
+        // Convert data to plain objects and remove any sensitive information if needed
+        const petsData = data.map(pet => pet.get({ plain: true }));
+        
+        console.log(petsData);
         res.status(200).json({
             status: 'success',
-            data,
+            data: petsData,
         });
     } catch (err) {
         next(err);
     }
 };
+
