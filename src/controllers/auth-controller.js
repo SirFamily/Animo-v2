@@ -21,9 +21,9 @@ exports.register = async (req, res, next) => {
             throw createError(400, 'Email and password are required');
         }
 
-        let img = '';
+        let url = '';
         if (req.file) {
-            img = await cloudUpload(req.file.path);
+            url = await cloudUpload(req.file.path);
         }
 
         const userExist = await userService.getUserByEmail(email);
@@ -51,7 +51,7 @@ exports.register = async (req, res, next) => {
             province,
             postalCode,
             bio,
-            img,
+            url,
         });
 
         res.status(201).json({ message: "Register success" });

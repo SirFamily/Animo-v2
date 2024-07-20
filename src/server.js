@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const db = require('./db/index.js');
+db.sequelize.sync({ force: false });
+console.log('The table for the User model was just (re)created!');
 
 const errorHandler = require("./middlewares/error");
 const notFoundHandler = require("./middlewares/notFound");
@@ -38,6 +40,4 @@ const line = `░▀▄░░▀▄░░▀▄░░▀▄░░▀▄░░░
       console.log("  Server Run On http://localhost:" + port);
       console.log("----------------------------------------");
     });
-    
-    db.sequelize.sync({ force: true });
-    console.log('The table for the User model was just (re)created!');
+

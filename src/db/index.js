@@ -78,7 +78,5 @@ db.Reviews.belongsTo(db.Host, { foreignKey: 'host_id' });
 db.User.hasMany(db.Reviews, { foreignKey: { name: 'user_id', field: 'user_id' } });
 db.Reviews.belongsTo(db.User, { foreignKey: 'user_id' });
 
-db.SupportPet.hasMany(db.Pet, { foreignKey: { name: 'support_pet_id', field: 'support_pet_id' } });
-db.Pet.belongsTo(db.SupportPet, { foreignKey: 'support_pet_id' });
 
 module.exports = db;

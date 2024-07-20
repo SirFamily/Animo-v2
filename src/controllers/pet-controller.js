@@ -1,6 +1,7 @@
 const cloudUpload = require("../utils/cloudUpload");
 const createError = require("../utils/createError");
 const petService = require("../service/petService");
+const { v4: uuidv4 } = require("uuid");
 
 exports.newpet = async (req, res, next) => {
     try {
@@ -24,7 +25,9 @@ exports.newpet = async (req, res, next) => {
         if (req.file) {
             url = await cloudUpload(req.file.path);
         }
+        const id = uuidv4().replace(/-/g, '');
         const petData = {
+            id,
             petName,
             animalType,
             breed,
@@ -49,10 +52,10 @@ exports.newpet = async (req, res, next) => {
 
 
 exports.listpet = async (req, res, next) => {
-    const { uid } = req.params;
     try {
-        const data = await petService.listpets({ userId: uid });
-
+        const { uid } = req.params;
+        const data = await petService.listpets(uid);  // Pass uid directly here
+        console.log(data);
         res.status(200).json({
             status: 'success',
             data,
