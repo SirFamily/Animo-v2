@@ -56,7 +56,6 @@ exports.listpet = async (req, res, next) => {
         const { uid } = req.params;
         const data = await petService.listpets(uid);
         
-        // Convert data to plain objects and remove any sensitive information if needed
         const petsData = data.map(pet => pet.get({ plain: true }));
         
         console.log(petsData);
