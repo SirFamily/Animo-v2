@@ -88,3 +88,63 @@ exports.me = async (req, res, next) => {
     console.log(req.user)
     res.json(req.user);
 }
+
+
+exports.updateUser = async (req, res, next) => {
+    try {
+        const { id } = req.user;
+        const {
+            firstName,
+            lastName,
+            email,
+            phone,
+            birthday,
+            address,
+            subDistrict,
+            district,
+            province,
+            postalCode,
+            bio
+        } = req.body;
+
+        // ใช้ฟังก์ชันจาก service เพื่อค้นหาผู้ใช้
+        const user = await userService.findUserById(id);
+
+        if (!user) {
+            return next(createError(404, "User not found"));
+        }
+
+        let url = user.url;
+        if (req.file) {
+            url = await cloudUpload(req.file.path);
+        }
+
+        const updatedData = {
+            firstName: firstName !== undefined ? firstName : user.firstName,
+            lastName: lastName !== undefined ? lastName : user.lastName,
+            email: email !== undefined ? email : user.email,
+            phone: phone !== undefined ? phone : user.phone,
+            birthday: birthday !== undefined ? new Date(birthday) : user.birthday,
+            address: address !== undefined ? address : user.address,
+            subDistrict: subDistrict !== undefined ? subDistrict : user.subDistrict,
+            district: district !== undefined ? district : user.district,
+            province: province !== undefined ? province : user.province,
+            postalCode: postalCode !== undefined ? postalCode : user.postalCode,
+            bio: bio !== undefined ? bio : user.bio,
+            url: url
+        };
+
+        // ใช้ฟังก์ชันจาก service เพื่ออัปเดตผู้ใช้
+        await userService.updateUser(id, updatedData);
+
+        // โหลดข้อมูลล่าสุดจากฐานข้อมูล
+        const updatedUser = await userService.findUserById(id);
+
+        res.status(200).json({
+            message: "User updated successfully",
+            user: updatedUser
+        });
+    } catch (err) {
+        next(err);
+    }
+};
