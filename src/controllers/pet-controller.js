@@ -68,3 +68,69 @@ exports.listpet = async (req, res, next) => {
     }
 };
 
+
+
+exports.updatePet = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const {
+            petName,
+            animalType,
+            breed,
+            weight,
+            height,
+            gender,
+            birthday,
+            petHistory
+        } = req.body;
+        console.log(id);
+
+        // ใช้ฟังก์ชันจาก service เพื่อค้นหาสัตว์เลี้ยง
+        const pet = await petService.findPetById(id);
+
+        if (!pet) {
+            return next(createError(404, "ไม่พบสัตว์เลี้ยง"));
+        }
+
+        let url = pet.url;
+        if (req.file) {
+            url = await cloudUpload(req.file.path);
+        }
+
+        const updatedData = {
+            petName: petName !== undefined ? petName : pet.petName,
+            animalType: animalType !== undefined ? animalType : pet.animalType,
+            breed: breed !== undefined ? breed : pet.breed,
+            weight: weight !== undefined ? parseFloat(weight) : pet.weight,
+            height: height !== undefined ? parseFloat(height) : pet.height,
+            gender: gender !== undefined ? gender : pet.gender,
+            birthday: birthday !== undefined ? new Date(birthday) : pet.birthday,
+            url: url,
+            petHistory: petHistory !== undefined ? petHistory : pet.petHistory
+        };
+
+        // ใช้ฟังก์ชันจาก service เพื่ออัปเดตสัตว์เลี้ยง
+        await petService.updatePet(id, updatedData);
+        // โหลดข้อมูลล่าสุดจากฐานข้อมูล
+        const updatedPet = await petService.findPetById(id);
+
+        res.status(200).json({
+            message: "อัปเดตสัตว์เลี้ยงเรียบร้อย",
+            pet: updatedPet
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.deletePet = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        await petService.deletePetById(id);
+        res.status(200).json({
+            message: "Pet deleted successfully"
+        });
+    } catch (err) {
+        next(err);
+    }
+};

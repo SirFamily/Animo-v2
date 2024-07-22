@@ -11,3 +11,20 @@ exports.listpets = async (userId) => {
         where: { userId: userId }
     });
 };
+
+// Function to pats update ID
+exports.updatePet = async (id, updatedData) => {
+    return Pet.update(updatedData, {
+        where: { id: id }
+    });
+};
+
+exports.findPetById = async (id) => {
+    return Pet.findOne({
+        where: { id }
+    });
+};
+
+exports.deletePetById = async (id) => {
+    return Pet.destroy({ where: { id } });
+};

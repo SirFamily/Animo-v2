@@ -6,4 +6,7 @@ const upload = require('../middlewares/upload');
 
 router.post('/create/:uid', authenticate, upload.single('url'), petController.newpet);
 router.get("/list/:uid" ,authenticate,petController.listpet)
+router.put('/update/:id', authenticate, petController.updatePet);
+router.delete('/delete/:id', authenticate, petController.deletePet);
+
 module.exports = router;
