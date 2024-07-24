@@ -72,7 +72,7 @@ exports.listpet = async (req, res, next) => {
 
 exports.updatePet = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { pid } = req.params;
         const {
             petName,
             animalType,
@@ -83,7 +83,7 @@ exports.updatePet = async (req, res, next) => {
             birthday,
             petHistory,
         } = req.body;
-
+        const id = pid
         console.log(id);
         console.log(req.body);
 
@@ -128,7 +128,8 @@ exports.updatePet = async (req, res, next) => {
 
 exports.deletePet = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { pid } = req.params;
+        const id = pid
         await petService.deletePetById(id);
         res.status(200).json({
             message: "Pet deleted successfully"
