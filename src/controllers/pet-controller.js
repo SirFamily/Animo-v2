@@ -81,15 +81,17 @@ exports.updatePet = async (req, res, next) => {
             height,
             gender,
             birthday,
-            petHistory
+            petHistory,
         } = req.body;
-        console.log(id);
 
-        // ใช้ฟังก์ชันจาก service เพื่อค้นหาสัตว์เลี้ยง
+        console.log(id);
+        console.log(req.body);
+
+        // Use the service function to find the pet
         const pet = await petService.findPetById(id);
 
         if (!pet) {
-            return next(createError(404, "ไม่พบสัตว์เลี้ยง"));
+            return next(createError(404, "Pet not found"));
         }
 
         let url = pet.url;
@@ -104,24 +106,25 @@ exports.updatePet = async (req, res, next) => {
             weight: weight !== undefined ? parseFloat(weight) : pet.weight,
             height: height !== undefined ? parseFloat(height) : pet.height,
             gender: gender !== undefined ? gender : pet.gender,
-            birthday: birthday !== undefined ? new Date(birthday) : pet.birthday,
+            birthday: birthday ? new Date(birthday).toISOString().slice(0, 19).replace('T', ' ') : null,
             url: url,
-            petHistory: petHistory !== undefined ? petHistory : pet.petHistory
+            petHistory: petHistory !== undefined ? petHistory : pet.petHistory,
         };
 
-        // ใช้ฟังก์ชันจาก service เพื่ออัปเดตสัตว์เลี้ยง
+        // Update the pet using the correct function name
         await petService.updatePet(id, updatedData);
-        // โหลดข้อมูลล่าสุดจากฐานข้อมูล
+        // Load the updated data from the database
         const updatedPet = await petService.findPetById(id);
 
         res.status(200).json({
-            message: "อัปเดตสัตว์เลี้ยงเรียบร้อย",
-            pet: updatedPet
+            message: "Pet updated successfully",
+            pet: updatedPet,
         });
     } catch (err) {
         next(err);
     }
 };
+
 
 exports.deletePet = async (req, res, next) => {
     try {
