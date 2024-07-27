@@ -7,7 +7,7 @@ exports.newpet = async (req, res, next) => {
     try {
         const {
             petName,
-            animalType,
+            species,
             breed,
             weight,
             height,
@@ -17,7 +17,7 @@ exports.newpet = async (req, res, next) => {
         } = req.body;
         const { uid } = req.params;
 
-        if (!petName || !animalType || !uid) {
+        if (!petName || !species || !uid) {
             return next(createError(400, 'Pet name, animal type, and user ID are required.'));
         }
 
@@ -29,7 +29,7 @@ exports.newpet = async (req, res, next) => {
         const petData = {
             id,
             petName,
-            animalType,
+            species,
             breed,
             weight: weight ? parseFloat(weight) : null,
             height: height ? parseFloat(height) : null,
@@ -75,7 +75,7 @@ exports.updatePet = async (req, res, next) => {
         const { pid } = req.params;
         const {
             petName,
-            animalType,
+            species,
             breed,
             weight,
             height,
@@ -101,7 +101,7 @@ exports.updatePet = async (req, res, next) => {
 
         const updatedData = {
             petName: petName !== undefined ? petName : pet.petName,
-            animalType: animalType !== undefined ? animalType : pet.animalType,
+            species: species !== undefined ? species : pet.species,
             breed: breed !== undefined ? breed : pet.breed,
             weight: weight !== undefined ? parseFloat(weight) : pet.weight,
             height: height !== undefined ? parseFloat(height) : pet.height,
