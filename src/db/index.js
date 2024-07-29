@@ -7,7 +7,7 @@ const sequelize = new Sequelize(
    '448518',    // Database password
    {
       host: 'localhost',    // Database host
-      //port: 8888,
+      port: '8888',
       dialect: 'mysql',     // Dialect
       define: {
          timestamps: false  // Additional settings
