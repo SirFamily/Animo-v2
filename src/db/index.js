@@ -1,16 +1,15 @@
 const { Sequelize } = require('sequelize');
 
-// Set up Sequelize connection
 const sequelize = new Sequelize(
-   'animodb01',  // Database name
-   'root',      // Database user
-   '448518',    // Database password
+   'animodb01',  
+   'root',      
+   '448518',    
    {
-      host: 'localhost',    // Database host
+      host: 'localhost',    
       port: '3306',
-      dialect: 'mysql',     // Dialect
+      dialect: 'mysql',     
       define: {
-         timestamps: false  // Additional settings
+         timestamps: false 
       },
       logging: true,
    }
