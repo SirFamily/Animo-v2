@@ -1,4 +1,6 @@
 const { Room } = require("../db/index");
+const { Host } = require("../db/index");
+const { PhotosRoom } = require("../db/index");
 
 // Function to create a new room
 exports.createRoom = async (roomData) => {
@@ -27,4 +29,18 @@ exports.findRoomById = async (id) => {
 
 exports.deleteRoomById = async (id) => {
     return Room.destroy({ where: { id } });
+};
+
+exports.findAccommodationById = async (id) => {
+    return Host.findOne({
+        where: { userId:id }
+    });
+};
+
+exports.uploadPhotosRoom = async ({ images, rid }) => {
+    const photoData = images.map(image => ({
+        url: image.url,
+        roomId: rid,
+    }));
+    return PhotosRoom.bulkCreate(photoData);
 };
