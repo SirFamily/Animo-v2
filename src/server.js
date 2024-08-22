@@ -11,6 +11,8 @@ const notFoundHandler = require("./middlewares/notFound");
 
 const authRoute = require("./routers/auth-route");
 const petsRoute = require("./routers/pet-route");
+const hostRoute = require("./routers/accommodation-routes")
+const roomRoute = require("./routers/room-routes")
 
 const cre = `░█▀▀░█▀▄░█▀▀░█▀█░▀█▀░█▀▀░█▀▄░░░█▀▄░█░█
 ░█░░░█▀▄░█▀▀░█▀█░░█░░█▀▀░█░█░░░█▀▄░░█░
@@ -27,6 +29,8 @@ const line = `░▀▄░░▀▄░░▀▄░░▀▄░░▀▄░░░
 
     app.use("/auth", authRoute);
     app.use("/pets", petsRoute);
+    app.use("/host", hostRoute);
+    app.use("/room", roomRoute);
     app.use("*", notFoundHandler);
     app.use(errorHandler);
 
