@@ -1,4 +1,6 @@
 const { Host } = require("../db/index");
+const { PhotosHost } = require("../db/index");
+
 
 // Function to create a new accommodation
 exports.createAccommodation = async (accommodationData) => {
@@ -27,4 +29,13 @@ exports.findAccommodationById = async (id) => {
 
 exports.deleteAccommodationById = async (id) => {
     return Host.destroy({ where: { id } });
+};
+
+exports.uploadPhotosHost = async ({ images, hostId }) => {
+    const photoData = images.map(image => ({
+        url: image.url,
+        hostId: hostId,
+    }));
+
+    return PhotosHost.bulkCreate(photoData);
 };

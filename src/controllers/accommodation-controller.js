@@ -1,6 +1,7 @@
 const createError = require("../utils/createError");
 const accommodationService = require("../service/accommodationService");
 const { v4: uuidv4 } = require("uuid");
+const cloudUpload = require("../utils/cloudUpload");
 
 exports.createAccommodation = async (req, res, next) => {
     try {
@@ -18,6 +19,12 @@ exports.createAccommodation = async (req, res, next) => {
         if (!name || !type || !address || !lat || !long || !uid) {
             return next(createError(400, 'Name, type, address, latitude, longitude, and user ID are required.'));
         }
+        const imagexPromiseArray = req.files.map((file) => {
+            return cloudUpload(file.path)
+        })
+
+        const imgUrlArray = await Promise.all(imagexPromiseArray)
+
 
         const id = uuidv4().replace(/-/g, '');
         const accommodationData = {
@@ -32,7 +39,16 @@ exports.createAccommodation = async (req, res, next) => {
             userId: uid,
         };
 
-        await accommodationService.createAccommodation(accommodationData);
+        const hostdata = await accommodationService.createAccommodation(accommodationData);
+        const images = imgUrlArray.map((imgUrl) => {
+            return {
+                url: imgUrl,
+            }
+        })
+
+        hostId = hostdata.id
+        const data = await accommodationService.uploadPhotosHost({ images, hostId });
+        console.log(data)
         res.status(201).json({
             status: 'success',
         });
