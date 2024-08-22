@@ -4,6 +4,7 @@ module.exports = (sequelize, Sequelize) => {
        {
           id: { type: Sequelize.STRING(36), primaryKey: true, allowNull: false, field: 'id' },
           name: { type: Sequelize.STRING(50), allowNull: false, field: 'name' },
+          quantity: { type: Sequelize.INTEGER, allowNull: false, field: 'quantity' },
           type: { type: Sequelize.STRING(50), allowNull: false, field: 'type' },
           price: { type: Sequelize.FLOAT, allowNull: false, field: 'price' },
           hostId: { type: Sequelize.STRING(36), allowNull: false, field: 'host_id' },
