@@ -1,6 +1,7 @@
 const { Host } = require("../db/index");
 const { PhotosHost } = require("../db/index");
-
+const {Room} = require("../db/index");
+const { PhotosRoom } = require("../db/index");
 
 // Function to create a new accommodation
 exports.createAccommodation = async (accommodationData) => {
@@ -38,4 +39,36 @@ exports.uploadPhotosHost = async ({ images, hostId }) => {
     }));
 
     return PhotosHost.bulkCreate(photoData);
+};
+
+exports.getImagesByHostId = async (hostId) => {
+    return PhotosHost.findAll({
+        where: { hostId }
+    });
+};
+
+
+// ส่วนที่เพิ่ม
+exports.listAccommodationsWithImages = async (userId) => {
+    return Host.findAll({
+        where: { userId: userId },
+        include: [
+            {
+                model: PhotosHost,
+                as: 'photosHost',
+                attributes: ['url'] 
+            },
+            // {
+            //     model: Room,
+            //     as: 'rooms',  // Alias for rooms
+            //     include: [
+            //         {
+            //             model: PhotosRoom,
+            //             as: 'roomPhotos',  // Alias for photos of the room
+            //             attributes: ['url']  // Fetch room photos
+            //         }
+            //     ]
+            // },
+        ]
+    });
 };

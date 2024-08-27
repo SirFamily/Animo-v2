@@ -44,3 +44,34 @@ exports.uploadPhotosRoom = async ({ images, rid }) => {
     }));
     return PhotosRoom.bulkCreate(photoData);
 };
+
+exports.getPhotosByRoomId = async (roomId) => {
+    return PhotosRoom.findAll({
+        where: { roomId }
+    });
+};
+
+// ส่วนที่เพิ่ม
+exports.listRoomsWithImages = async (hostId) => {
+    return Room.findAll({
+        where: { hostId: hostId },
+        include: [
+            {
+                model: PhotosRoom,
+                as: 'photosRoom',
+                attributes: ['url'] 
+            },
+            // {
+            //     model: Room,
+            //     as: 'rooms',  // Alias for rooms
+            //     include: [
+            //         {
+            //             model: PhotosRoom,
+            //             as: 'roomPhotos',  // Alias for photos of the room
+            //             attributes: ['url']  // Fetch room photos
+            //         }
+            //     ]
+            // },
+        ]
+    });
+};

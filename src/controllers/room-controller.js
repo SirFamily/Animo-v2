@@ -53,21 +53,48 @@ const images = imgUrlArray.map((imgUrl) => {
     }
 };
 
+// เรียกข้อมูลแบบเก่า
+// exports.listRooms = async (req, res, next) => {
+//     try {
+//         const { hostId } = req.params;
+//         const data = await roomService.listRooms(hostId);
+
+//         // ตรวจสอบข้อมูลที่รับมาจากฐานข้อมูล
+//         console.log("Rooms Data:", data);
+
+//         const roomsData = await Promise.all(data.map(async room => {
+//             const plainRoom = room.get({ plain: true });
+//             const photos = await roomService.getPhotosByRoomId(plainRoom.id); // ดึงรูปภาพที่เกี่ยวข้องกับห้อง
+//             return {
+//                 ...plainRoom,
+//                 images: photos.map(photo => photo.url) // เพิ่ม URL ของรูปภาพ
+//             };
+//         }));
+
+//         res.status(200).json({
+//             status: 'success',
+//             data: roomsData,
+//         });
+//     } catch (err) {
+//         next(err);
+//     }
+// };
+
+// เรียกข้อมูลแบบใหม่
 exports.listRooms = async (req, res, next) => {
     try {
         const { hostId } = req.params;
-        const data = await roomService.listRooms(hostId);
-
-        const roomsData = data.map(room => room.get({ plain: true }));
+        const data = await roomService.listRoomsWithImages(hostId);
 
         res.status(200).json({
             status: 'success',
-            data: roomsData,
+            data: data,
         });
     } catch (err) {
         next(err);
     }
 };
+
 
 exports.updateRoom = async (req, res, next) => {
     try {

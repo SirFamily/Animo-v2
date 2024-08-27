@@ -57,21 +57,49 @@ exports.createAccommodation = async (req, res, next) => {
     }
 };
 
+// เรียกข้อมูลแบบเก่า
+// exports.listAccommodations = async (req, res, next) => {
+//     try {
+//         const { uid } = req.params;
+//         const data = await accommodationService.listAccommodations(uid);
+
+//         // Include image URLs in the response data
+//         const accommodationsData = await Promise.all(
+//             data.map(async (accommodation) => {
+//                 const accommodationDetails = accommodation.get({ plain: true });
+//                 const images = await accommodationService.getImagesByHostId(accommodationDetails.id);
+//                 return {
+//                     ...accommodationDetails,
+//                     images: images.map(img => ({ url: img.url }))
+//                 };
+//             })
+//         );
+
+//         res.status(200).json({
+//             status: 'success',
+//             data: accommodationsData,
+//         });
+//     } catch (err) {
+//         next(err);
+//     }
+// };
+
+// เรียกข้อมูลแบบใหม่
 exports.listAccommodations = async (req, res, next) => {
     try {
         const { uid } = req.params;
-        const data = await accommodationService.listAccommodations(uid);
-
-        const accommodationsData = data.map(accommodation => accommodation.get({ plain: true }));
+        const accommodations = await accommodationService.listAccommodationsWithImages(uid);
 
         res.status(200).json({
-            status: 'success',
-            data: accommodationsData,
+            status: 'success ',
+            data: accommodations,
         });
     } catch (err) {
         next(err);
     }
 };
+
+
 
 exports.updateAccommodation = async (req, res, next) => {
     try {

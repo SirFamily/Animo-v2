@@ -46,14 +46,17 @@ db.Pet.belongsTo(db.User, { foreignKey: 'user_id' });
 db.Host.hasMany(db.ExtraFeatures, { foreignKey: { name: 'host_id', field: 'host_id' } });
 db.ExtraFeatures.belongsTo(db.Host, { foreignKey: 'host_id' });
 
-db.Host.hasMany(db.PhotosHost, { foreignKey: { name: 'host_id', field: 'host_id' } });
-db.PhotosHost.belongsTo(db.Host, { foreignKey: 'host_id' });
+// Host to PhotosHost (Host Photos)
+db.Host.hasMany(db.PhotosHost, { foreignKey: 'host_id', as: 'photosHost' });
+db.PhotosHost.belongsTo(db.Host, { foreignKey: 'host_id', as: 'host' });
 
-db.Host.hasMany(db.Room, { foreignKey: { name: 'host_id', field: 'host_id' } });
-db.Room.belongsTo(db.Host, { foreignKey: 'host_id' });
+// Host to Room (Host Rooms)
+db.Host.hasMany(db.Room, { foreignKey: 'host_id', as: 'rooms' });
+db.Room.belongsTo(db.Host, { foreignKey: 'host_id', as: 'host' });
 
-db.Room.hasMany(db.PhotosRoom, { foreignKey: { name: 'room_id', field: 'room_id' } });
-db.PhotosRoom.belongsTo(db.Room, { foreignKey: 'room_id' });
+// Room to PhotosRoom (Room Photos)
+db.Room.hasMany(db.PhotosRoom, { foreignKey: 'room_id', as: 'photosRoom' });
+db.PhotosRoom.belongsTo(db.Room, { foreignKey: 'room_id', as: 'room' });
 
 db.Host.hasMany(db.BookingRequest, { foreignKey: { name: 'host_id', field: 'host_id' } });
 db.BookingRequest.belongsTo(db.Host, { foreignKey: 'host_id' });
