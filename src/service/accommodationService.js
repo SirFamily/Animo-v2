@@ -1,21 +1,18 @@
 const { Host } = require("../db/index");
 const { PhotosHost } = require("../db/index");
-const {Room} = require("../db/index");
+const { Room } = require("../db/index");
 const { PhotosRoom } = require("../db/index");
 
-// Function to create a new accommodation
 exports.createAccommodation = async (accommodationData) => {
     return Host.create(accommodationData);
 };
 
-// Function to list accommodations by user ID
 exports.listAccommodations = async (userId) => {
     return Host.findAll({
         where: { userId: userId }
     });
 };
 
-// Function to update accommodation by ID
 exports.updateAccommodation = async (id, updatedData) => {
     return Host.update(updatedData, {
         where: { id: id }
@@ -29,8 +26,15 @@ exports.findAccommodationById = async (id) => {
 };
 
 exports.deleteAccommodationById = async (id) => {
-    return Host.destroy({ where: { id } });
+    await PhotosHost.destroy({
+        where: { hostId: id }
+    });
+
+    return Host.destroy({
+        where: { id: id }
+    });
 };
+
 
 exports.uploadPhotosHost = async ({ images, hostId }) => {
     const photoData = images.map(image => ({
@@ -41,14 +45,13 @@ exports.uploadPhotosHost = async ({ images, hostId }) => {
     return PhotosHost.bulkCreate(photoData);
 };
 
+
 exports.getImagesByHostId = async (hostId) => {
     return PhotosHost.findAll({
         where: { hostId }
     });
 };
 
-
-// ส่วนที่เพิ่ม
 exports.listAccommodationsWithImages = async (userId) => {
     return Host.findAll({
         where: { userId: userId },
@@ -56,8 +59,9 @@ exports.listAccommodationsWithImages = async (userId) => {
             {
                 model: PhotosHost,
                 as: 'photosHost',
-                attributes: ['url'] 
+                attributes: ['url']
             },
+            // Uncomment if you want to include rooms and their photos as well
             // {
             //     model: Room,
             //     as: 'rooms',  // Alias for rooms
@@ -69,6 +73,21 @@ exports.listAccommodationsWithImages = async (userId) => {
             //         }
             //     ]
             // },
+        ]
+    });
+};
+
+
+exports.findAccommodationForDelete = async (id) => {
+    return Host.findOne({
+        where: { id: id },
+        include: [
+
+            {
+                model: Room,
+                as: 'rooms',  
+                
+            },
         ]
     });
 };

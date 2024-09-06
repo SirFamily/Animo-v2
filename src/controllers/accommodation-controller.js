@@ -146,11 +146,24 @@ exports.updateAccommodation = async (req, res, next) => {
 exports.deleteAccommodation = async (req, res, next) => {
     try {
         const { id } = req.params;
+
+        const accommodation = await accommodationService.findAccommodationForDelete(id);
+        if (!accommodation) {
+            throw createError(404, "Accommodation not found");
+        }
+    
+        if (accommodation.rooms.length > 0) {
+            throw createError(409, "Cannot delete accommodation with rooms");
+        }
+
         await accommodationService.deleteAccommodationById(id);
+
         res.status(200).json({
+            status: "success",
             message: "Accommodation deleted successfully"
         });
     } catch (err) {
-        next(err);
+        next(err); 
     }
 };
+
