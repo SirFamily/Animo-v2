@@ -3,12 +3,12 @@ const { Sequelize } = require('sequelize');
 // สร้างการเชื่อมต่อกับฐานข้อมูล MySQL
 const sequelize = new Sequelize(
   process.env.NAME_DB,    // ชื่อฐานข้อมูล
-  'root',                 // ชื่อผู้ใช้ฐานข้อมูล
+  process.env.USER_DB,                 // ชื่อผู้ใช้ฐานข้อมูล
   process.env.PASS_DB,    // รหัสผ่านฐานข้อมูล
   { 
-    host: 'localhost',    // โฮสต์ของฐานข้อมูล
-    port: '3306',         // พอร์ตที่ใช้เชื่อมต่อ
-    dialect: 'mysql',     // ชนิดของฐานข้อมูล
+    host: process.env.IP_DB,    // โฮสต์ของฐานข้อมูล
+    port: process.env.PORT_DB,         // พอร์ตที่ใช้เชื่อมต่อ
+    dialect: process.env.DIALECT_DB,     // ชนิดของฐานข้อมูล
     define: { timestamps: false }, // กำหนดไม่ให้ Sequelize เพิ่มฟิลด์ timestamps โดยอัตโนมัติ
     logging: true         // แสดง log ขณะทำงาน
   }
