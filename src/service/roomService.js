@@ -28,6 +28,10 @@ exports.findRoomById = async (id) => {
 };
 
 exports.deleteRoomById = async (id) => {
+    await PhotosRoom.destroy({
+        where: { roomId: id }
+    });
+
     return Room.destroy({ where: { id } });
 };
 

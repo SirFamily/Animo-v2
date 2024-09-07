@@ -6,7 +6,7 @@ const upload = require('../middlewares/upload');
 
 router.post('/create/:uid', authenticate,upload.array('images', 10), accommodationController.createAccommodation);
 router.get("/list/:uid", authenticate, accommodationController.listAccommodations);
-router.put('/update/:id', authenticate, accommodationController.updateAccommodation);
+router.put('/update/:id', authenticate, upload.array('images', 10), accommodationController.updateAccommodation);
 router.delete('/delete/:id', authenticate, accommodationController.deleteAccommodation);
 
 module.exports = router;
