@@ -36,7 +36,6 @@ console.log('The table for the User model was just (re)created!');
 //     });
 // }, 60000);
 
-// tset jo 
 app.use(cors());
 app.use(express.json());
 
