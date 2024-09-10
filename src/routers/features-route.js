@@ -5,11 +5,7 @@ const authenticate = require('../middlewares/authenticate');
 
 
 router.post('/create', authenticate, featuresController.createFeature);
-
-
 router.put('/update/:fid', authenticate, featuresController.updateFeature);
-
-
 router.delete('/delete/:fid', authenticate, featuresController.deleteFeature);
 
 module.exports = router;

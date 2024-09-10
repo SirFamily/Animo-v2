@@ -10,29 +10,24 @@ exports.createRoom = async (req, res, next) => {
             quantity,
             type,
             price,
+            supportPetName,  // New: Support pet name field
+            supportPetDescription // New: Support pet description field
         } = req.body;
 
-        if (!name || !quantity || !type || !price) {
-            return next(createError(400, 'Name, quantity, type, price, and host ID are required.'));
+        if (!name || !quantity || !type || !price ) {
+            return next(createError(400, 'Name, quantity, type, and price are required.'));
         }
 
-        const imagexPromiseArray = req.files.map((file) => {
-            return cloudUpload(file.path)
-        })
+        const imagexPromiseArray = req.files.map((file) => cloudUpload(file.path));
+        const imgUrlArray = await Promise.all(imagexPromiseArray);
 
-        const imgUrlArray = await Promise.all(imagexPromiseArray)
+        const images = imgUrlArray.map((imgUrl) => ({ url: imgUrl }));
 
-const images = imgUrlArray.map((imgUrl) => {
-            return {
-                url: imgUrl,
-            }
-        })
-        const uid = req.user.id
-        console.log(uid)
+        const uid = req.user.id;
         const accommodation = await roomService.findAccommodationById(uid);
-        const hid = accommodation.id
-        console.log(hid)
+        const hid = accommodation.id;
         const id = uuidv4().replace(/-/g, '');
+
         const roomData = {
             id,
             name,
@@ -42,16 +37,30 @@ const images = imgUrlArray.map((imgUrl) => {
             hostId: hid
         };
 
+        // Create the room
         const data = await roomService.createRoom(roomData);
-        const rid = data.id
-        const photosdata = await roomService.uploadPhotosRoom({ images, rid });
+        const rid = data.id;
+
+        // Upload room photos
+        await roomService.uploadPhotosRoom({ images, rid });
+
+        if (supportPetName) {
+            await roomService.createSupportPet({
+                name: supportPetName,
+                description: supportPetDescription || '', 
+                roomId: rid 
+            });
+        }
+
         res.status(201).json({
             status: 'success',
+            message: 'Room created successfully',
         });
     } catch (err) {
         next(err);
     }
 };
+
 
 // เรียกข้อมูลแบบเก่า
 // exports.listRooms = async (req, res, next) => {

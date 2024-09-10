@@ -62,6 +62,10 @@ db.Room.belongsTo(db.Host, { foreignKey: 'host_id', as: 'host' });
 db.Room.hasMany(db.PhotosRoom, { foreignKey: 'room_id', as: 'photosRoom',}); 
 db.PhotosRoom.belongsTo(db.Room, { foreignKey: 'room_id', as: 'room' });
 
+// ความสัมพันธ์ระหว่าง SupportPet และ Room
+db.Room.hasMany(db.SupportPet, { foreignKey: { name: 'room_id', field: 'room_id' }, as: 'supportPets' });
+db.SupportPet.belongsTo(db.Room, { foreignKey: 'room_id', as: 'room' });
+
 // ความสัมพันธ์ระหว่าง Host และ BookingRequest
 db.Host.hasMany(db.BookingRequest, { foreignKey: { name: 'host_id', field: 'host_id' },}); 
 db.BookingRequest.belongsTo(db.Host, { foreignKey: 'host_id' });

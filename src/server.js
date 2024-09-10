@@ -11,6 +11,7 @@ const authRoute = require("./routers/auth-route");
 const petsRoute = require("./routers/pet-route");
 const hostRoute = require("./routers/accommodation-routes")
 const roomRoute = require("./routers/room-routes")
+const previewRoute = require("./routers/preview-host-routes.js")
 
 const cre = `░█▀▀░█▀▄░█▀▀░█▀█░▀█▀░█▀▀░█▀▄░░░█▀▄░█░█
 ░█░░░█▀▄░█▀▀░█▀█░░█░░█▀▀░█░█░░░█▀▄░░█░
@@ -43,6 +44,7 @@ app.use("/auth", authRoute);
 app.use("/pets", petsRoute);
 app.use("/host", hostRoute);
 app.use("/room", roomRoute);
+app.use("/pre/host", previewRoute);
 app.use("*", notFoundHandler);
 app.use(errorHandler);
 

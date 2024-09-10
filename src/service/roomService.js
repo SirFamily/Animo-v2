@@ -1,10 +1,15 @@
 const { Room } = require("../db/index");
 const { Host } = require("../db/index");
 const { PhotosRoom } = require("../db/index");
+const {SupportPet} = require("../db/index");
 
 // Function to create a new room
 exports.createRoom = async (roomData) => {
     return Room.create(roomData);
+};
+
+exports.createSupportPet = async (roomData) => {
+    return SupportPet.create(roomData);
 };
 
 // Function to list rooms by host ID
@@ -58,24 +63,18 @@ exports.getPhotosByRoomId = async (roomId) => {
 // ส่วนที่เพิ่ม
 exports.listRoomsWithImages = async (hostId) => {
     return Room.findAll({
-        where: { hostId: hostId },
+        where: { host_id: hostId },
         include: [
             {
                 model: PhotosRoom,
                 as: 'photosRoom',
-                attributes: ['url'] 
+                attributes: ['url']
             },
-            // {
-            //     model: Room,
-            //     as: 'rooms',  // Alias for rooms
-            //     include: [
-            //         {
-            //             model: PhotosRoom,
-            //             as: 'roomPhotos',  // Alias for photos of the room
-            //             attributes: ['url']  // Fetch room photos
-            //         }
-            //     ]
-            // },
+            {
+                model: SupportPet,
+                as: 'supportPets', // Alias for supportPets
+                attributes: ['id', 'name', 'description'] // Attributes you want to fetch from SupportPet
+            }
         ]
     });
 };
