@@ -1,5 +1,4 @@
-// const prisma = require("../config/pirsma");
-const {User} = require("../db/index")
+const { User } = require("../db/index");
 
 // Function to create a new user
 exports.createUser = async (userData) => {

@@ -106,7 +106,7 @@ exports.updateUser = async (req, res, next) => {
             postalCode,
             bio
         } = req.body;
-
+        console.log(birthday)
         // ใช้ฟังก์ชันจาก service เพื่อค้นหาผู้ใช้
         const user = await userService.findUserById(id);
 
@@ -118,7 +118,7 @@ exports.updateUser = async (req, res, next) => {
         if (req.file) {
             url = await cloudUpload(req.file.path);
         }
-
+  
         const updatedData = {
             firstName: firstName !== undefined ? firstName : user.firstName,
             lastName: lastName !== undefined ? lastName : user.lastName,
@@ -136,7 +136,6 @@ exports.updateUser = async (req, res, next) => {
 
         // ใช้ฟังก์ชันจาก service เพื่ออัปเดตผู้ใช้
         await userService.updateUser(id, updatedData);
-
         // โหลดข้อมูลล่าสุดจากฐานข้อมูล
         const updatedUser = await userService.findUserById(id);
 
