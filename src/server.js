@@ -3,8 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const db = require('./db/index.js');
-db.sequelize.sync({ force: false });
-console.log('The table for the User model was just (re)created!');
 
 const errorHandler = require("./middlewares/error");
 const notFoundHandler = require("./middlewares/notFound");
@@ -24,24 +22,38 @@ const line = `░▀▄░░▀▄░░▀▄░░▀▄░░▀▄░░░
 ░░▄▀░░▄▀░░▄▀░░▄▀░░▄▀░▀▄░░▀▄░░▀▄░░▀▄░░▀▄░
 ░▀░░░▀░░░▀░░░▀░░░▀░░░░░▀░░░▀░░░▀░░░▀░░░▀`;
 
-    app.use(cors());
-    app.use(express.json());
+db.sequelize.sync({ force: false });
+console.log('The table for the User model was just (re)created!');
 
-    app.use("/auth", authRoute);
-    app.use("/pets", petsRoute);
-    app.use("/host", hostRoute);
-    app.use("/room", roomRoute);
-    app.use("*", notFoundHandler);
-    app.use(errorHandler);
+// console.log("กำลังเชื่อมต่อฐานข้อมูลใช้เวลา 1 นาที")
+// setTimeout(() => {
+//   db.sequelize.sync({ force: false })
+//     .then(() => {
+//       console.log('The table for the User model was just (re)created!');
+//     })
+//     .catch(err => {
+//       console.error('Unable to connect to the database:', err);
+//     });
+// }, 60000);
 
-    const port = process.env.PORT || 9000;
-    app.listen(port, () => {
-      console.log(line);
-      console.log(cre);
-      console.log(str);
-      console.log(line);
-      console.log("----------------------------------------");
-      console.log("  Server Run On http://localhost:" + port);
-      console.log("----------------------------------------");
-    });
+app.use(cors());
+app.use(express.json());
+
+app.use("/auth", authRoute);
+app.use("/pets", petsRoute);
+app.use("/host", hostRoute);
+app.use("/room", roomRoute);
+app.use("*", notFoundHandler);
+app.use(errorHandler);
+
+const port = process.env.PORT || 9000;
+app.listen(port, () => {
+  console.log(line);
+  console.log(cre);
+  console.log(str);
+  console.log(line);
+  console.log("----------------------------------------");
+  console.log("  Server Run On http://localhost:" + port);
+  console.log("----------------------------------------");
+});
 
