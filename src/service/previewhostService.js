@@ -1,5 +1,14 @@
-const { Host } = require("../db/index");
-const { PhotosHost } = require("../db/index");
-const { Room } = require("../db/index");
-const { PhotosRoom } = require("../db/index");
-const {SupportPet} = require("../db/index");
+const { Host, PhotosHost } = require("../db/index");
+
+exports.listPublishedHosts = async () => {
+    return Host.findAll({
+        where: { publish: true }, // เงื่อนไขกรองเฉพาะที่ publish เป็น true
+        include: [
+            {
+                model: PhotosHost,
+                as: 'photosHost',
+                attributes: ['url']
+            }
+        ]
+    });
+};

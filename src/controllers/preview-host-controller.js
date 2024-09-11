@@ -1,9 +1,13 @@
+const previewhostService = require('../service/previewhostService');
 const createError = require('../utils/createError');
 
-exports.listALlHost = async (req, res, next) => {
+exports.listPublishedHost = async (req, res, next) => {
     try {
-
-        json({ status: 'success'});
+        const hosts = await previewhostService.listPublishedHosts();
+        res.status(200).json({
+            status: 'success',
+            data: hosts
+        });
     } catch (err) {
         next(err);
     }
