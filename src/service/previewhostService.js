@@ -1,4 +1,4 @@
-const { Host, PhotosHost, Room, PhotosRoom, SupportPet } = require("../db/index");
+const { Host, PhotosHost, Room, PhotosRoom, SupportPet, User } = require("../db/index");
 
 exports.listPublishedHosts = async () => {
     return Host.findAll({
@@ -6,25 +6,30 @@ exports.listPublishedHosts = async () => {
         include: [
             {
                 model: PhotosHost,
-                as: 'photosHost', 
+                as: 'photosHost',
                 attributes: ['url']
             },
             {
                 model: Room,
-                as: 'rooms', 
+                as: 'rooms',
                 attributes: ['id', 'name', 'quantity', 'type', 'price'],
                 include: [
                     {
                         model: PhotosRoom,
-                        as: 'photosRoom', 
+                        as: 'photosRoom',
                         attributes: ['url']
                     },
                     {
                         model: SupportPet,
-                        as: 'supportPets', 
+                        as: 'supportPets',
                         attributes: ['id', 'name', 'description']
                     }
                 ]
+            },
+            {
+                model: User,
+                as: 'user',
+                attributes: ['firstName', 'url', 'lastName'] // ดึงเฉพาะชื่อเจ้าของที่พัก
             }
         ]
     });
@@ -36,25 +41,30 @@ exports.listHostByID = async (hid) => {
         include: [
             {
                 model: PhotosHost,
-                as: 'photosHost', 
+                as: 'photosHost',
                 attributes: ['url']
             },
             {
                 model: Room,
-                as: 'rooms', 
+                as: 'rooms',
                 attributes: ['id', 'name', 'quantity', 'type', 'price'],
                 include: [
                     {
                         model: PhotosRoom,
-                        as: 'photosRoom', 
+                        as: 'photosRoom',
                         attributes: ['url']
                     },
                     {
                         model: SupportPet,
-                        as: 'supportPets', 
+                        as: 'supportPets',
                         attributes: ['id', 'name', 'description']
                     }
                 ]
+            },
+            {
+                model: User,
+                as: 'user',
+                attributes: ['firstName', 'url', 'lastName'] // ดึงเฉพาะชื่อเจ้าของที่พัก
             }
         ]
     });

@@ -138,3 +138,16 @@ exports.deletePet = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.listPetByIdUser = async(req,res,next) =>{
+    try{
+        const { id } = req.user;
+        const pet = await petService.listPetByIdUser(id);
+        res.status(200).json({
+            message: "Pet found successfully",
+            pet: pet
+            });
+            } catch (err) {
+                next(err);
+                }
+                };

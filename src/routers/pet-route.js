@@ -8,5 +8,6 @@ router.post('/create/:uid', authenticate, upload.single('url'), petController.ne
 router.get("/list/:uid" ,authenticate,petController.listpet)
 router.put('/update/:pid', authenticate,upload.single('url'), petController.updatePet);
 router.delete('/delete/:pid', authenticate, petController.deletePet);
+router.get("/find" ,authenticate,petController.listPetByIdUser)
 
 module.exports = router;

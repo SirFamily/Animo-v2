@@ -12,6 +12,7 @@ const petsRoute = require("./routers/pet-route");
 const hostRoute = require("./routers/accommodation-routes")
 const roomRoute = require("./routers/room-routes")
 const previewRoute = require("./routers/preview-host-routes.js")
+const bookingRoute = require("./routers/booking-router")
 
 const cre = `░█▀▀░█▀▄░█▀▀░█▀█░▀█▀░█▀▀░█▀▄░░░█▀▄░█░█
 ░█░░░█▀▄░█▀▀░█▀█░░█░░█▀▀░█░█░░░█▀▄░░█░
@@ -45,6 +46,7 @@ app.use("/pets", petsRoute);
 app.use("/host", hostRoute);
 app.use("/room", roomRoute);
 app.use("/pre/host", previewRoute);
+app.use("/booking", bookingRoute);
 app.use("*", notFoundHandler);
 app.use(errorHandler);
 

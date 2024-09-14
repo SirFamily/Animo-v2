@@ -98,4 +98,9 @@ db.Reviews.belongsTo(db.Host, { foreignKey: 'host_id' });
 db.User.hasMany(db.Reviews, { foreignKey: { name: 'user_id', field: 'user_id' },}); 
 db.Reviews.belongsTo(db.User, { foreignKey: 'user_id' });
 
+// ความสัมพันธ์ระหว่าง Host และ User (เจ้าของที่พัก)
+db.User.hasMany(db.Host, { foreignKey: 'user_id', as: 'hosts' });
+db.Host.belongsTo(db.User, { foreignKey: 'user_id', as: 'user' });
+
+
 module.exports = db;

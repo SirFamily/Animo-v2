@@ -28,3 +28,9 @@ exports.findPetById = async (id) => {
 exports.deletePetById = async (id) => {
     return Pet.destroy({ where: { id } });
 };
+
+exports.listPetByIdUser = async(id) =>{
+    return Pet.findAll({
+        where: { userId: id }
+        });
+}
