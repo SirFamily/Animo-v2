@@ -11,10 +11,10 @@ exports.createBooking = async (req, res, next) => {
             return next(createError(400, "Missing required booking details."));
         }
 
-        // Step 1: สร้าง BookingRequest
-        const bookingId = uuidv4().replace(/-/g, '');  // สร้าง UUID สำหรับ bookingId
+        const bookingId = uuidv4().replace(/-/g, '');  
+
         const bookingData = {
-            id: bookingId,  // ใช้ UUID ที่สร้าง
+            id: bookingId,
             hostId,
             roomId,
             userId,
@@ -27,7 +27,6 @@ exports.createBooking = async (req, res, next) => {
         // Step 2: สร้าง PetCountBooking สำหรับสัตว์เลี้ยงแต่ละตัว
         for (const pet of pets) {
             const petCountData = {
-                id: uuidv4().replace(/-/g, ''),  // สร้าง UUID สำหรับ pet_count_booking
                 bookingId,
                 petId: pet.petId,
                 count: pet.count
@@ -53,7 +52,6 @@ exports.createBooking = async (req, res, next) => {
             bookingId,
         });
     } catch (err) {
-        // Rollback transaction ในกรณีที่เกิดข้อผิดพลาด
         await transaction.rollback();
         next(err);
     }
