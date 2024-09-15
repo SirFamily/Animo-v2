@@ -13,6 +13,8 @@ const hostRoute = require("./routers/accommodation-routes")
 const roomRoute = require("./routers/room-routes")
 const previewRoute = require("./routers/preview-host-routes.js")
 const bookingRoute = require("./routers/booking-router")
+const requestRoute = require("./routers/request-routes.js")
+const historyRoute = require("./routers/history-routes.js");
 
 const cre = `░█▀▀░█▀▄░█▀▀░█▀█░▀█▀░█▀▀░█▀▄░░░█▀▄░█░█
 ░█░░░█▀▄░█▀▀░█▀█░░█░░█▀▀░█░█░░░█▀▄░░█░
@@ -47,6 +49,8 @@ app.use("/host", hostRoute);
 app.use("/room", roomRoute);
 app.use("/pre/host", previewRoute);
 app.use("/booking", bookingRoute);
+app.use("/request", requestRoute);
+app.use("/history", historyRoute);
 app.use("*", notFoundHandler);
 app.use(errorHandler);
 
