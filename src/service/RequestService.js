@@ -1,55 +1,75 @@
-const db = require('../db/index'); // นำเข้าเชื่อมต่อกับ database
+const { BookingRequest, PetCountBooking, Payment, Room, Host, Pet, User } = require("../db/index");
 
-exports.getBookingDetails = async (bookingId, currentUserId) => { // เพิ่ม currentUserId เป็นพารามิเตอร์
-    try {
-        const bookingRequest = await db.BookingRequest.findOne({
-            where: { userId: currentUserId }, // ค้นหาด้วย bookingId
-            include: [
-                {
-                    model: db.Room,
-                    as: 'room',
-                    include: [
-                        {
-                            model: db.Host,
-                            as: 'host',
-                            include: [{ model: db.User, as: 'user' }]
-                        }
-                    ]
-                },
-                {
-                    model: db.User,
-                    as: 'user'
-                },
-                {
-                    model: db.PetCountBooking,
-                    as: 'pet_count_bookings',
-                    include: [
-                        {
-                            model: db.Pet,
-                            as: 'pet'
-                        }
-                    ]
-                },
-                {
-                    model: db.Payment,
-                    as: 'payments'
-                }
-            ]
-        });
+exports.getBookingRequestsByUser = async (userId) => {
+    const requests = await BookingRequest.findAll({
+        where: { userId }, 
+        include: [
+            // { 
+            //     model: Host,   // ดึงข้อมูล Host ที่เกี่ยวข้อง
+            //     as: 'host'
+            // },
+            { 
+                model: Room,   // ดึงข้อมูล Room ที่เกี่ยวข้อง
+                as: 'room',
+                attributes: ['name'],
+            },
+            { 
+                model: Payment,  // ดึงข้อมูล Payment ที่เกี่ยวข้อง
+                as: 'payments',
+                attributes: ['amount'],
+            },
+            { 
+                model: PetCountBooking,  // ดึงข้อมูล PetCountBooking ที่เกี่ยวข้อง
+                // include: [
+                //     { 
+                //         model: Pet,   // ดึงข้อมูล Pet ที่เกี่ยวข้องกับการจอง
+                //         as: 'pet',
+                //         attributes: ['petName'],
+                //     }
+                // ]
+            },
+        ]
+    });
+    return requests;
+};
 
-        // ถ้าไม่มี BookingRequest
-        if (!bookingRequest) {
-            return null;
-        }
 
-        // ตรวจสอบว่า userId ตรงกับ host's userId หรือไม่
-        if (bookingRequest.room.host.user.id !== currentUserId) {
-            return null; // ถ้าไม่ตรง ให้คืนค่า null
-        }
+exports.getBookingRequestsDetailsById = async (reqId) => {
+    const request = await BookingRequest.findOne({
+        where: { id: reqId },  // ค้นหาการจองตาม reqId
+        include: [
+            { 
+                model: Room,   // ดึงข้อมูลห้องที่เกี่ยวข้อง
+                as: 'room',
+                // attributes: ['name', 'type', 'price'],
+            },
+            { 
+                model: Payment,  // ดึงข้อมูลการชำระเงิน
+                as: 'payments',
+                // attributes: ['amount', 'status'],
+            },
+            { 
+                model: PetCountBooking,  // ดึงข้อมูล PetCountBooking
+                include: [
+                    {
+                        model: Pet,  // ดึงข้อมูลสัตว์เลี้ยงที่เกี่ยวข้อง
+                        as: 'pet',
+                        // attributes: ['petName', 'species', 'breed', 'weight', 'height', 'gender'],
+                    }
+                ]
+            },
+            { 
+                model: Host,  // ดึงข้อมูลเจ้าของที่พัก
+                as: 'host',
+                // attributes: ['name', 'type', 'address'],
+            },
+            { 
+                model: User,  // ดึงข้อมูลผู้จอง
+                as: 'user',
+                // attributes: ['id', 'name', 'email'],
+            }
+        ]
+    });
 
-        return bookingRequest; // ส่งข้อมูลกลับเมื่อเงื่อนไขผ่าน
-    } catch (error) {
-        console.error("Error fetching booking details:", error);
-        throw new Error('Error fetching booking details');
-    }
+    return request;
 };

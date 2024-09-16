@@ -1,55 +1,34 @@
-const db = require('../db/index'); // นำเข้าเชื่อมต่อกับ database
+const { BookingRequest, PetCountBooking, Payment, Room, Host, User,Pet } = require("../db/index");
 
-exports.getBookingDetails = async (bookingId, currentUserId) => {
-    try {
-        const bookingRequest = await db.BookingRequest.findOne({
-            where: { id: bookingId }, // ค้นหาด้วย bookingId
-            include: [
-                {
-                    model: db.Room,
-                    as: 'room',
-                    include: [
-                        {
-                            model: db.Host,
-                            as: 'host',
-                            include: [{ model: db.User, as: 'user' }]
-                        }
-                    ]
-                },
-                {
-                    model: db.User,
-                    as: 'user'
-                },
-                {
-                    model: db.PetCountBooking,
-                    as: 'pet_count_bookings',
-                    include: [
-                        {
-                            model: db.Pet,
-                            as: 'pet'
-                        }
-                    ]
-                },
-                {
-                    model: db.Payment,
-                    as: 'payments'
-                }
-            ]
-        });
-
-        // ถ้าไม่มี BookingRequest
-        if (!bookingRequest) {
-            return null;
-        }
-
-        // ตรวจสอบว่า userId ตรงกับ user ของผู้จองหรือไม่
-        if (bookingRequest.user.id !== currentUserId) {
-            return null; // ถ้าไม่ตรง ให้คืนค่า null
-        }
-
-        return bookingRequest; // ส่งข้อมูลกลับเมื่อเงื่อนไขผ่าน
-    } catch (error) {
-        console.error("Error fetching booking details:", error);
-        throw new Error('Error fetching booking details');
-    }
+exports.getBookingHistoryByUser = async (userId) => {
+    const requests = await BookingRequest.findAll({
+        where: { userId }, 
+        include: [
+            // { 
+            //     model: Host,   // ดึงข้อมูล Host ที่เกี่ยวข้อง
+            //     as: 'host'
+            // },
+            { 
+                model: Room,   // ดึงข้อมูล Room ที่เกี่ยวข้อง
+                as: 'room',
+                attributes: ['name'],
+            },
+            { 
+                model: Payment,  // ดึงข้อมูล Payment ที่เกี่ยวข้อง
+                as: 'payments',
+                attributes: ['amount'],
+            },
+            { 
+                model: PetCountBooking,  // ดึงข้อมูล PetCountBooking ที่เกี่ยวข้อง
+                // include: [
+                //     { 
+                //         model: Pet,   // ดึงข้อมูล Pet ที่เกี่ยวข้องกับการจอง
+                //         as: 'pet',
+                //         attributes: ['petName'],
+                //     }
+                // ]
+            },
+        ]
+    });
+    return requests;
 };
