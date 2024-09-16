@@ -3,7 +3,7 @@ const db = require('../db/index'); // นำเข้าเชื่อมต่
 exports.getBookingDetails = async (bookingId, currentUserId) => { // เพิ่ม currentUserId เป็นพารามิเตอร์
     try {
         const bookingRequest = await db.BookingRequest.findOne({
-            where: { id: bookingId }, // ค้นหาด้วย bookingId
+            where: { userId: currentUserId }, // ค้นหาด้วย bookingId
             include: [
                 {
                     model: db.Room,

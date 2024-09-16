@@ -5,7 +5,6 @@ module.exports = (sequelize, Sequelize) => {
           id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false, field: 'id' },
           bookingId: { type: Sequelize.STRING(36), allowNull: false, field: 'booking_id' },
           petId: { type: Sequelize.STRING(36), allowNull: false, field: 'pet_id' },
-          count: { type: Sequelize.INTEGER, allowNull: false, field: 'count' },
           createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW, field: 'created_at' }
        },
        {
