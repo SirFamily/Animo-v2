@@ -61,13 +61,19 @@ exports.getBookingRequestsDetailsById = async (reqId) => {
             { 
                 model: Host,  // ดึงข้อมูลเจ้าของที่พัก
                 as: 'host',
-                // attributes: ['name', 'type', 'address'],
+                include: [
+                    {
+                        model: User,  // ดึงข้อมูลสัตว์เลี้ยงที่เกี่ยวข้อง
+                        as: 'user',
+                        // attributes: ['petName', 'species', 'breed', 'weight', 'height', 'gender'],
+                    }
+                ]
             },
-            { 
-                model: User,  // ดึงข้อมูลผู้จอง
-                as: 'user',
-                // attributes: ['id', 'name', 'email'],
-            }
+            // { 
+            //     model: User,  // ดึงข้อมูลผู้จอง
+            //     as: 'user',
+            //     // attributes: ['id', 'name', 'email'],
+            // }
         ]
     });
 
