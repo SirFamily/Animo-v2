@@ -3,7 +3,8 @@ const createError = require('../utils/createError');
 
 exports.listPublishedHost = async (req, res, next) => {
     try {
-        const hosts = await previewhostService.listPublishedHosts();
+        const userId = req.user.id;
+        const hosts = await previewhostService.listPublishedHosts(userId);
         res.status(200).json({
             status: 'success',
             data: hosts

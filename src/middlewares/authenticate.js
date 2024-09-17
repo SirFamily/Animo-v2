@@ -36,7 +36,7 @@ const authenticate = async (req, res, next) => {
         delete userData.password;
 
         req.user = userData;
-        console.log({ user: req.user });
+        // console.log({ user: req.user });
         next();
     } catch (err) {
         next(err);

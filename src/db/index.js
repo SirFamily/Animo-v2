@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
     port: process.env.PORT_DB,         // พอร์ตที่ใช้เชื่อมต่อ
     dialect: process.env.DIALECT_DB,     // ชนิดของฐานข้อมูล
     define: { timestamps: false }, // กำหนดไม่ให้ Sequelize เพิ่มฟิลด์ timestamps โดยอัตโนมัติ
-    logging: true         // แสดง log ขณะทำงาน
+    logging: false         // แสดง log ขณะทำงาน
   }
 );
 

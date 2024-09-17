@@ -1,8 +1,13 @@
 const { Host, PhotosHost, Room, PhotosRoom, SupportPet, User } = require("../db/index");
+const { Op } = require('sequelize');
 
-exports.listPublishedHosts = async () => {
+exports.listPublishedHosts = async (userId) => {
     return Host.findAll({
-        where: { publish: true },
+        where: {
+            publish: true,
+            userId: { [Op.ne]: userId }
+        },
+
         include: [
             {
                 model: PhotosHost,
