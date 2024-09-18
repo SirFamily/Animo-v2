@@ -1,28 +1,31 @@
-const { BookingRequest, PetCountBooking, Payment, Room, Host, User,Pet } = require("../db/index");
+const { BookingRequest, PetCountBooking, Payment, Room, Host, Pet, User } = require("../db/index");
 
-exports.getBookingHistoryByUser = async (userId) => {
+exports.getBookingRequestsByUser = async (userId) => {
     const requests = await BookingRequest.findAll({
-        where: { userId }, 
+        where: {
+            userId,
+            bookingStatus: ['reject', 'completed']
+        },
         include: [
             // { 
-            //     model: Host,   // ดึงข้อมูล Host ที่เกี่ยวข้อง
+            //     model: Host,   
             //     as: 'host'
             // },
-            { 
-                model: Room,   // ดึงข้อมูล Room ที่เกี่ยวข้อง
+            {
+                model: Room,   
                 as: 'room',
                 attributes: ['name'],
             },
-            { 
-                model: Payment,  // ดึงข้อมูล Payment ที่เกี่ยวข้อง
+            {
+                model: Payment,  
                 as: 'payments',
                 attributes: ['amount'],
             },
-            { 
-                model: PetCountBooking,  // ดึงข้อมูล PetCountBooking ที่เกี่ยวข้อง
+            {
+                model: PetCountBooking,  
                 // include: [
                 //     { 
-                //         model: Pet,   // ดึงข้อมูล Pet ที่เกี่ยวข้องกับการจอง
+                //         model: Pet,   
                 //         as: 'pet',
                 //         attributes: ['petName'],
                 //     }
@@ -32,3 +35,91 @@ exports.getBookingHistoryByUser = async (userId) => {
     });
     return requests;
 };
+
+
+exports.getBookingRequestsDetailsById = async (reqId) => {
+    const request = await BookingRequest.findOne({
+        where: {
+            id: reqId,
+        }, 
+        include: [
+            {
+                model: Room,   
+                as: 'room',
+                // attributes: ['name', 'type', 'price'],
+            },
+            {
+                model: Payment,  
+                as: 'payments',
+                // attributes: ['amount', 'status'],
+            },
+            {
+                model: PetCountBooking, 
+                include: [
+                    {
+                        model: Pet, 
+                        as: 'pet',
+                        // attributes: ['petName', 'species', 'breed', 'weight', 'height', 'gender'],
+                    }
+                ]
+            },
+            {
+                model: Host, 
+                as: 'host',
+                include: [
+                    {
+                        model: User,  
+                        as: 'user',
+                        // attributes: ['petName', 'species', 'breed', 'weight', 'height', 'gender'],
+                    }
+                ]
+            },
+            {
+                model: User,  
+                as: 'user',
+                // attributes: ['id', 'name', 'email'],
+            }
+        ]
+    });
+
+    return request;
+};
+
+exports.findAccommodationByUserId = async (userId) => {
+    return Host.findOne({
+        where: { userId: userId }  
+    });
+};
+
+exports.getBookingRequestsByAccommodationId = async (hostId) => {
+    const requests = await BookingRequest.findAll({
+        where: { hostId: hostId,
+            bookingStatus: ['reject', 'completed']
+         },  
+        include: [
+            {
+                model: Room,  
+                as: 'room',
+                attributes: ['name'],
+            },
+            {
+                model: Payment,  
+                as: 'payments',
+                attributes: ['amount'],
+            },
+            {
+                model: PetCountBooking,  
+                include: [
+                    {
+                        model: Pet,   
+                        as: 'pet',
+                        attributes: ['petName'],
+                    }
+                ]
+            },
+        ]
+    });
+    return requests;
+};
+
+
