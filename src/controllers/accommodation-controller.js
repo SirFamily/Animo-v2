@@ -86,13 +86,13 @@ exports.updateAccommodation = async (req, res, next) => {
             publish
         } = req.body;
 
-        // Find the accommodation by its ID
+
         const accommodation = await accommodationService.findAccommodationById(id);
         if (!accommodation) {
             return next(createError(404, "Accommodation not found"));
         }
 
-        // Prepare updated data
+
         const updatedData = {
             name: name !== undefined ? name : accommodation.name,
             type: type !== undefined ? type : accommodation.type,
@@ -103,7 +103,6 @@ exports.updateAccommodation = async (req, res, next) => {
             publish: publish !== undefined ? publish : accommodation.publish
         };
 
-        // Check if there are any new images to upload
         if (req.files && req.files.length > 0) {
             const imageUploadPromises = req.files.map(file => cloudUpload(file.path));
             const uploadedImageUrls = await Promise.all(imageUploadPromises);
@@ -112,7 +111,6 @@ exports.updateAccommodation = async (req, res, next) => {
             await accommodationService.uploadPhotosHost({ images: newImages, hostId: accommodation.id });
         }
 
-        // Update the accommodation with new data
         await accommodationService.updateAccommodation(id, updatedData);
 
         res.status(200).json({

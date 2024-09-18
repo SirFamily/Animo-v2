@@ -33,8 +33,6 @@ exports.register = async (req, res, next) => {
 
         const userId = uuidv4().replace(/-/g, '');
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Convert birthday string to Date object if it's provided
         const formattedBirthday = birthday ? new Date(birthday) : null;
 
         await userService.createUser({
@@ -107,7 +105,7 @@ exports.updateUser = async (req, res, next) => {
             bio
         } = req.body;
         console.log(birthday)
-        // ใช้ฟังก์ชันจาก service เพื่อค้นหาผู้ใช้
+
         const user = await userService.findUserById(id);
 
         if (!user) {
@@ -133,10 +131,7 @@ exports.updateUser = async (req, res, next) => {
             bio: bio !== undefined ? bio : user.bio,
             url: url
         };
-
-        // ใช้ฟังก์ชันจาก service เพื่ออัปเดตผู้ใช้
         await userService.updateUser(id, updatedData);
-        // โหลดข้อมูลล่าสุดจากฐานข้อมูล
         const updatedUser = await userService.findUserById(id);
 
         res.status(200).json({

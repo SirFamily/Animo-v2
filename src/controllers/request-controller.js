@@ -3,10 +3,7 @@ const createError = require('../utils/createError');
 
 exports.listRequestDetails = async (req, res, next) => {
     try {
-        // รับ userId จาก token (เช่นจาก middleware authenticate)
         const userId = req.user.id;
-
-        // ดึงข้อมูลการจองที่เกี่ยวข้องกับ userId นี้เท่านั้น
         const requests = await RequestService.getBookingRequestsByUser(userId);
         res.status(200).json({
             status: 'success',
@@ -21,11 +18,8 @@ exports.listRequestDetails = async (req, res, next) => {
 exports.getBookingRequestsDetailsById = async (req, res, next) => {
     try {
         const { reqId } = req.params;
-
-        // ดึงข้อมูลการจองที่เกี่ยวข้องกับ reqId
         const requestDetails = await RequestService.getBookingRequestsDetailsById(reqId);
 
-        // ตรวจสอบว่าพบข้อมูลการจองหรือไม่
         if (!requestDetails) {
             return res.status(200).json({
                 status: 'Booking requestss not found',
@@ -45,8 +39,6 @@ exports.getBookingRequestsDetailsById = async (req, res, next) => {
 exports.listRequestForOwner = async (req, res, next) => {
     try {
         const userId = req.user.id;
-
-        // ดึงข้อมูลที่พักที่เจ้าของเป็นผู้ดูแล โดยใช้ userId ของเจ้าของที่พัก
         const accommodation = await RequestService.findAccommodationByUserId(userId);
         
         if (!accommodation) {
@@ -56,11 +48,7 @@ exports.listRequestForOwner = async (req, res, next) => {
             });
         }
 
-        // ดึง id ของที่พักจาก accommodation (สมมติว่า accommodation ส่งกลับมาเป็น object และมี id)
-        const hostId = accommodation.id; // ตรวจสอบว่าส่งกลับ id จริงๆ
-
-        
-        // ดึงข้อมูลการจองที่เกี่ยวข้องกับ hostId
+        const hostId = accommodation.id;
         const requests = await RequestService.getBookingRequestsByAccommodationId(hostId);
 
         if (requests.length === 0) {

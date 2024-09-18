@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
        },
        {
           tableName: 'host',
-          timestamps: false // If you don't want Sequelize to automatically add `createdAt` and `updatedAt` fields
+          timestamps: false 
        }
     );
  

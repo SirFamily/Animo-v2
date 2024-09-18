@@ -31,12 +31,10 @@ const authenticate = async (req, res, next) => {
             return createError(400, "User not found");
         }
 
-        // Convert to plain object and delete password
         const userData = user.get({ plain: true });
         delete userData.password;
 
         req.user = userData;
-        // console.log({ user: req.user });
         next();
     } catch (err) {
         next(err);

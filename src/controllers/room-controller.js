@@ -10,8 +10,8 @@ exports.createRoom = async (req, res, next) => {
             quantity,
             type,
             price,
-            supportPetName,  // New: Support pet name field
-            supportPetDescription // New: Support pet description field
+            supportPetName,  
+            supportPetDescription 
         } = req.body;
 
         if (!name || !quantity || !type || !price ) {
@@ -37,11 +37,8 @@ exports.createRoom = async (req, res, next) => {
             hostId: hid
         };
 
-        // Create the room
         const data = await roomService.createRoom(roomData);
         const rid = data.id;
-
-        // Upload room photos
         await roomService.uploadPhotosRoom({ images, rid });
 
         if (supportPetName) {

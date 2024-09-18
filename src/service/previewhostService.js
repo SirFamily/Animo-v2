@@ -34,7 +34,7 @@ exports.listPublishedHosts = async (userId) => {
             {
                 model: User,
                 as: 'user',
-                attributes: ['firstName', 'url', 'lastName'] // ดึงเฉพาะชื่อเจ้าของที่พัก
+                attributes: ['firstName', 'url', 'lastName'] 
             }
         ]
     });
@@ -69,7 +69,7 @@ exports.listHostByID = async (hid) => {
             {
                 model: User,
                 as: 'user',
-                attributes: ['firstName', 'url', 'lastName'] // ดึงเฉพาะชื่อเจ้าของที่พัก
+                attributes: ['firstName', 'url', 'lastName'] 
             }
         ]
     });

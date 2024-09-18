@@ -87,7 +87,6 @@ exports.updatePet = async (req, res, next) => {
         console.log(id);
         console.log(req.body);
 
-        // Use the service function to find the pet
         const pet = await petService.findPetById(id);
 
         if (!pet) {
@@ -111,9 +110,7 @@ exports.updatePet = async (req, res, next) => {
             petHistory: petHistory !== undefined ? petHistory : pet.petHistory,
         };
 
-        // Update the pet using the correct function name
         await petService.updatePet(id, updatedData);
-        // Load the updated data from the database
         const updatedPet = await petService.findPetById(id);
 
         res.status(200).json({

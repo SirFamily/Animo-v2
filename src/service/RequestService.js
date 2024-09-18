@@ -8,24 +8,24 @@ exports.getBookingRequestsByUser = async (userId) => {
         },
         include: [
             // { 
-            //     model: Host,   // ดึงข้อมูล Host ที่เกี่ยวข้อง
+            //     model: Host,   
             //     as: 'host'
             // },
             {
-                model: Room,   // ดึงข้อมูล Room ที่เกี่ยวข้อง
+                model: Room,   
                 as: 'room',
                 attributes: ['name'],
             },
             {
-                model: Payment,  // ดึงข้อมูล Payment ที่เกี่ยวข้อง
+                model: Payment,  
                 as: 'payments',
                 attributes: ['amount'],
             },
             {
-                model: PetCountBooking,  // ดึงข้อมูล PetCountBooking ที่เกี่ยวข้อง
+                model: PetCountBooking,  
                 // include: [
                 //     { 
-                //         model: Pet,   // ดึงข้อมูล Pet ที่เกี่ยวข้องกับการจอง
+                //         model: Pet,   
                 //         as: 'pet',
                 //         attributes: ['petName'],
                 //     }
@@ -41,41 +41,41 @@ exports.getBookingRequestsDetailsById = async (reqId) => {
     const request = await BookingRequest.findOne({
         where: {
             id: reqId,
-        },  // ค้นหาการจองตาม reqId
+        }, 
         include: [
             {
-                model: Room,   // ดึงข้อมูลห้องที่เกี่ยวข้อง
+                model: Room,   
                 as: 'room',
                 // attributes: ['name', 'type', 'price'],
             },
             {
-                model: Payment,  // ดึงข้อมูลการชำระเงิน
+                model: Payment,  
                 as: 'payments',
                 // attributes: ['amount', 'status'],
             },
             {
-                model: PetCountBooking,  // ดึงข้อมูล PetCountBooking
+                model: PetCountBooking, 
                 include: [
                     {
-                        model: Pet,  // ดึงข้อมูลสัตว์เลี้ยงที่เกี่ยวข้อง
+                        model: Pet, 
                         as: 'pet',
                         // attributes: ['petName', 'species', 'breed', 'weight', 'height', 'gender'],
                     }
                 ]
             },
             {
-                model: Host,  // ดึงข้อมูลเจ้าของที่พัก
+                model: Host, 
                 as: 'host',
                 include: [
                     {
-                        model: User,  // ดึงข้อมูลสัตว์เลี้ยงที่เกี่ยวข้อง
+                        model: User,  
                         as: 'user',
                         // attributes: ['petName', 'species', 'breed', 'weight', 'height', 'gender'],
                     }
                 ]
             },
             {
-                model: User,  // ดึงข้อมูลผู้จอง
+                model: User,  
                 as: 'user',
                 // attributes: ['id', 'name', 'email'],
             }
@@ -85,35 +85,33 @@ exports.getBookingRequestsDetailsById = async (reqId) => {
     return request;
 };
 
-// ค้นหาที่พักโดยใช้ userId ของเจ้าของที่พัก
 exports.findAccommodationByUserId = async (userId) => {
     return Host.findOne({
-        where: { userId: userId }  // ค้นหาจาก userId ของเจ้าของที่พัก
+        where: { userId: userId }  
     });
 };
 
-// ดึงข้อมูลการจองทั้งหมดที่เกี่ยวข้องกับที่พักที่มี hostId
 exports.getBookingRequestsByAccommodationId = async (hostId) => {
     const requests = await BookingRequest.findAll({
         where: { hostId: hostId,
             bookingStatus: ['pending', 'confirmed']
-         },  // ค้นหาการจองที่เกี่ยวข้องกับที่พัก (hostId)
+         },  
         include: [
             {
-                model: Room,   // ดึงข้อมูลห้องที่เกี่ยวข้องกับการจอง
+                model: Room,  
                 as: 'room',
                 attributes: ['name'],
             },
             {
-                model: Payment,  // ดึงข้อมูลการชำระเงินที่เกี่ยวข้องกับการจอง
+                model: Payment,  
                 as: 'payments',
                 attributes: ['amount'],
             },
             {
-                model: PetCountBooking,  // ดึงข้อมูล PetCountBooking ที่เกี่ยวข้องกับการจอง
+                model: PetCountBooking,  
                 include: [
                     {
-                        model: Pet,   // ดึงข้อมูลสัตว์เลี้ยงที่จอง
+                        model: Pet,   
                         as: 'pet',
                         attributes: ['petName'],
                     }

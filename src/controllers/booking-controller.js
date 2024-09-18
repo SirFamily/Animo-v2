@@ -23,8 +23,6 @@ exports.createBooking = async (req, res, next) => {
         };
 
         await bookingService.createBookingRequest(bookingData, transaction);
-
-        // Step 2: สร้าง PetCountBooking สำหรับสัตว์เลี้ยงแต่ละตัว
         for (const pet of pets) {
             const petCountData = {
                 bookingId,
@@ -34,17 +32,14 @@ exports.createBooking = async (req, res, next) => {
             await bookingService.createPetCountBooking(petCountData, transaction);
         }
 
-        // Step 3: สร้าง Payment
         const paymentData = {
-            id: uuidv4().replace(/-/g, ''),  // สร้าง UUID สำหรับ payment
+            id: uuidv4().replace(/-/g, ''),  
             bookingId,
             amount: parseFloat(paymentAmount),
             status: 'Pending'
         };
 
         await bookingService.createPayment(paymentData, transaction);
-
-        // ถ้าทุกอย่างสำเร็จ ให้ commit transaction
         await transaction.commit();
 
         res.status(201).json({
