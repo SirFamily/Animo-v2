@@ -1,4 +1,4 @@
-const HistoryService = require('../service/historyService');
+const HistoryService = require('../service/HistoryService');
 const createError = require('../utils/createError');
 
 exports.listHistory = async (req, res, next) => {
