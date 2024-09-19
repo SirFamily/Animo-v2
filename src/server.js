@@ -28,19 +28,19 @@ const line = `░▀▄░░▀▄░░▀▄░░▀▄░░▀▄░░░
 ░░▄▀░░▄▀░░▄▀░░▄▀░░▄▀░▀▄░░▀▄░░▀▄░░▀▄░░▀▄░
 ░▀░░░▀░░░▀░░░▀░░░▀░░░░░▀░░░▀░░░▀░░░▀░░░▀`;
 
-db.sequelize.sync({ force: false });
-console.log('The table for the User model was just (re)created!');
+// db.sequelize.sync({ force: false });
+// console.log('The table for the User model was just (re)created!');
 
-// console.log("กำลังเชื่อมต่อฐานข้อมูลใช้เวลา 1 นาที")
-// setTimeout(() => {
-//   db.sequelize.sync({ force: false })
-//     .then(() => {
-//       console.log('The table for the User model was just (re)created!');
-//     })
-//     .catch(err => {
-//       console.error('Unable to connect to the database:', err);
-//     });
-// }, 60000);
+console.log("กำลังเชื่อมต่อฐานข้อมูลใช้เวลา 1 นาที")
+setTimeout(() => {
+  db.sequelize.sync({ force: false })
+    .then(() => {
+      console.log('The table for the User model was just (re)created!');
+    })
+    .catch(err => {
+      console.error('Unable to connect to the database:', err);
+    });
+}, 60000);
 
 app.use(cors());
 app.use(express.json());

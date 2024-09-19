@@ -9,7 +9,7 @@ const sequelize = new Sequelize(
     port: process.env.PORT_DB,         
     dialect: process.env.DIALECT_DB,     
     define: { timestamps: false }, 
-    logging: false        
+    logging: true        
   }
 );
 

@@ -8,6 +8,5 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8112
-
 CMD ["npm", "run", "dev"]
+

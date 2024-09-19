@@ -1,5 +1,5 @@
 const createError = require("../utils/createError");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const adminService = require("../service/adminService");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
