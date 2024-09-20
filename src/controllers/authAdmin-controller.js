@@ -62,3 +62,8 @@ exports.login = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.getad = async (req, res, next) => {
+    console.log(req.admin)
+    res.json(req.admin);
+}

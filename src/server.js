@@ -47,6 +47,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/auth", authRoute);
+app.use("/auth/a", adminRoute);
 app.use("/pets", petsRoute);
 app.use("/host", hostRoute);
 app.use("/features", featuresRoute);
