@@ -1,4 +1,4 @@
-const { Host, PhotosHost, Room, PhotosRoom, SupportPet, User } = require("../db/index");
+const { Host, PhotosHost, Room, PhotosRoom, SupportPet, User ,Features } = require("../db/index");
 const { Op } = require('sequelize');
 
 exports.listPublishedHosts = async (userId) => {
@@ -36,7 +36,7 @@ exports.listPublishedHosts = async (userId) => {
                 as: 'user',
                 attributes: ['firstName', 'url', 'lastName'] 
             }
-        ]
+        ]   
     });
 };
 
@@ -70,7 +70,13 @@ exports.listHostByID = async (hid) => {
                 model: User,
                 as: 'user',
                 attributes: ['firstName', 'url', 'lastName'] 
+            },
+            {
+                model: Features,
+                as: 'features',
+                attributes: ['id', 'name', 'price']
             }
+            
         ]
     });
 };

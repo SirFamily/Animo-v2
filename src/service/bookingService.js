@@ -1,4 +1,4 @@
-const { BookingRequest, PetCountBooking, Payment, sequelize } = require("../db/index");
+const { BookingRequest, PetCountBooking, Payment, BookingFeatures, sequelize } = require("../db/index");
 
 exports.startTransaction = () => {
     return sequelize.transaction();
@@ -14,4 +14,8 @@ exports.createPetCountBooking = async (petCountData, transaction) => {
 
 exports.createPayment = async (paymentData, transaction) => {
     return Payment.create(paymentData, { transaction });
+};
+
+exports.createBookingFeatures = async (bookingFeatureData, transaction) => {
+    return BookingFeatures.create(bookingFeatureData, { transaction });
 };

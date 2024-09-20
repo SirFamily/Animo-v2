@@ -1,4 +1,4 @@
-const { BookingRequest, PetCountBooking, Payment, Room, Host, Pet, User } = require("../db/index");
+const { BookingRequest, PetCountBooking, BookingFeatures, Payment, Room, Host, Pet, User, Features } = require("../db/index");
 
 exports.getBookingRequestsByUser = async (userId) => {
     const requests = await BookingRequest.findAll({
@@ -78,7 +78,18 @@ exports.getBookingRequestsDetailsById = async (reqId) => {
                 model: User,  
                 as: 'user',
                 // attributes: ['id', 'name', 'email'],
-            }
+            },
+            {
+                model: BookingFeatures,
+                as : 'bookingFeatures',
+                include: [
+                    {
+                        model: Features,
+                        as: 'feature',
+                        // attributes: ['name', 'description'],
+                        }
+                        ]
+            },
         ]
     });
 
