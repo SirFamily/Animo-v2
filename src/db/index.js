@@ -25,7 +25,7 @@ db.User = require('./model/user')(sequelize, Sequelize);
 db.Pet = require('./model/pet')(sequelize, Sequelize); 
 db.VerifyHost = require('./model/verifyHost')(sequelize, Sequelize); 
 db.Host = require('./model/host')(sequelize, Sequelize); 
-db.ExtraFeatures = require('./model/extraFeatures')(sequelize, Sequelize); 
+db.Features = require('./model/features')(sequelize, Sequelize); 
 db.PhotosHost = require('./model/photosHost')(sequelize, Sequelize); 
 db.Room = require('./model/room')(sequelize, Sequelize); 
 db.PhotosRoom = require('./model/photosRoom')(sequelize, Sequelize); 
@@ -42,8 +42,8 @@ db.VerifyHost.belongsTo(db.Admin, { foreignKey: 'admin_id' });
 db.User.hasMany(db.Pet, { foreignKey: { name: 'user_id', field: 'user_id' } }); 
 db.Pet.belongsTo(db.User, { foreignKey: 'user_id' });
 
-db.Host.hasMany(db.ExtraFeatures, { foreignKey: { name: 'host_id', field: 'host_id' },}); 
-db.ExtraFeatures.belongsTo(db.Host, { foreignKey: 'host_id' });
+db.Host.hasMany(db.Features, { foreignKey: { name: 'host_id', field: 'host_id' },}); 
+db.Features.belongsTo(db.Host, { foreignKey: 'host_id' });
 
 db.Host.hasMany(db.PhotosHost, { foreignKey: 'host_id', as: 'photosHost',}); 
 db.PhotosHost.belongsTo(db.Host, { foreignKey: 'host_id', as: 'host' });

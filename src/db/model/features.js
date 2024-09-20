@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-    const ExtraFeatures = sequelize.define(
-       'extra_features',
+    const Features = sequelize.define(
+       'features',
        {
           id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false, field: 'id' },
           name: { type: Sequelize.STRING(50), allowNull: false, field: 'name' },
@@ -10,10 +10,10 @@ module.exports = (sequelize, Sequelize) => {
           hostId: { type: Sequelize.STRING(36), allowNull: false, field: 'host_id' }
        },
        {
-          tableName: 'extra_features',
+          tableName: 'features',
           timestamps: false 
        }
     );
  
-    return ExtraFeatures;
+    return Features;
 }
