@@ -1,16 +1,17 @@
 const { VerifyHost, Host, PhotosHost } = require("../db/index");
 
 
-exports.updateVerificationStatus = async ({ id, hostId, adminId, newStatus }) => {
-    return await VerifyHost.update({ 
-        verifyStatus: newStatus, 
-        adminId: adminId, 
-        verifiedAt: new Date() 
-    },
-    {
-        where: { id, hostId }  // This is the where clause that specifies which record to update
-    });
+exports.updateVerificationStatus = async ({ id, adminId, newStatus }) => {
+  if (!id) throw new Error("Invalid ID");  // Ensure ID is present
+  return await VerifyHost.update({
+      verifyStatus: newStatus,
+      adminId: adminId,
+      verifiedAt: new Date()
+  }, {
+      where: { id }  // Make sure ID is passed properly
+  });
 };
+
 
 exports.listVerifyByPending = async () => {
     return await VerifyHost.findAll({
