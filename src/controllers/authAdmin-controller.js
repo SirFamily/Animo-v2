@@ -56,7 +56,7 @@ exports.login = async (req, res, next) => {
             throw createError(401, "Invalid Password");
         }
 
-        const token = jwt.sign({ id: adminExist.id }, process.env.SECRET_KEY, { expiresIn: process.env.EXPIRES_IN });
+        const token = jwt.sign({ id: adminExist.id }, process.env.SECRET_KEY, { expiresIn: '1h', });
         res.status(200).json({ message: "Login successful", token: token });
     } catch (err) {
         next(err);

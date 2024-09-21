@@ -1,11 +1,16 @@
 const { Host } = require("../db/index");
 const { PhotosHost } = require("../db/index");
 const { Room } = require("../db/index");
-const { PhotosRoom } = require("../db/index");
+const { VerifyHost } = require("../db/index");
+
 
 exports.createAccommodation = async (accommodationData) => {
     return Host.create(accommodationData);
 };
+
+exports.createVerifyhost = async(hid)=>{
+    return  VerifyHost.create({hostId : hid})
+}
 
 exports.listAccommodations = async (userId) => {
     return Host.findAll({
@@ -60,6 +65,11 @@ exports.listAccommodationsWithImages = async (userId) => {
                 model: PhotosHost,
                 as: 'photosHost',
                 attributes: ['url']
+            },
+            {
+                model: VerifyHost,
+                as: 'verifyHosts',
+                attributes: ['verify_status']
             },
             // Uncomment if you want to include rooms and their photos as well
             // {

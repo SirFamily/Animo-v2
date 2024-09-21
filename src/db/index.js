@@ -91,5 +91,8 @@ db.BookingFeatures.belongsTo(db.BookingRequest, { foreignKey: 'booking_id', as: 
 db.Features.hasMany(db.BookingFeatures, { foreignKey: { name: 'feature_id', field: 'feature_id' }, as: 'featureBookings' });
 db.BookingFeatures.belongsTo(db.Features, { foreignKey: 'feature_id', as: 'feature' });
 
+db.Host.hasMany(db.VerifyHost, { foreignKey: { name: 'host_id', field: 'host_id' }, as: 'verifyHosts' });
+db.VerifyHost.belongsTo(db.Host, { foreignKey: 'host_id', as: 'host' });
+
 
 module.exports = db;

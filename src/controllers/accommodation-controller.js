@@ -47,6 +47,7 @@ exports.createAccommodation = async (req, res, next) => {
         })
 
         hostId = hostdata.id
+        await accommodationService.createVerifyhost(hostId)
         const data = await accommodationService.uploadPhotosHost({ images, hostId });
         console.log(data)
         res.status(201).json({
