@@ -4,17 +4,19 @@ const verifyHostService = require("../service/verifyhostService");
 exports.updateVerification = async (req, res, next) => {
     try {
         const { id } = req.params;   // Get ID from request params
-        const { } = req.body;   // Get newStatus from request body
+        const { newStatus } = req.body;   // Get newStatus from request body
         const adminId = req.admin.id;  // Get adminId from request (assuming this is set in middleware)
-        
+
+        if (!newStatus) {
+            throw createError(400, "New status is required");
+        }
+
         // Ensure that you pass an object with the required fields
         const updatedRecord = await verifyHostService.updateVerificationStatus({ id, adminId, newStatus });
-        
-        console.log(id, newStatus, adminId);  // Log to debug (removed hostId)
-        
+
         res.status(200).json({
             message: "Verification status updated successfully",
-            data: updatedRecord
+            data: updatedRecord,
         });
     } catch (error) {
         next(error);
@@ -22,13 +24,36 @@ exports.updateVerification = async (req, res, next) => {
 };
 
 
-exports.list = async (req, res, next) => {
-    try {
-        const adminId = req.admin.id;
 
+exports.listPending = async (req, res, next) => {
+    try {
         const list = await verifyHostService.listVerifyByPending();
         res.status(200).json({
             message: "List of verifications retrieved successfully",
+            data: list,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.listRejected = async (req, res, next) => {
+    try {
+        const list = await verifyHostService.listVerifyByRejected();
+        res.status(200).json({
+            message: "List of rejected verifications retrieved successfully",
+            data: list,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.listApproved = async (req, res, next) => {
+    try {
+        const list = await verifyHostService.listVerifyByApprove();
+        res.status(200).json({
+            message: "List of approved verifications retrieved successfully",
             data: list,
         });
     } catch (error) {

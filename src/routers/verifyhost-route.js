@@ -3,9 +3,10 @@ const router = express.Router();
 const verifyHostController = require("../controllers/verifyhost-controller");
 const authenticateAdmin = require("../middlewares/authenticateAdmin");
 
-// Route to update the verification status of a host
 router.put("/:id", authenticateAdmin, verifyHostController.updateVerification);
-router.get("/list", authenticateAdmin, verifyHostController.list);
+router.get("/list/pending", authenticateAdmin, verifyHostController.listPending);
+router.get("/list/approved", authenticateAdmin, verifyHostController.listApproved); 
+router.get("/list/rejected", authenticateAdmin, verifyHostController.listRejected);  
 router.get("/detail/:id", authenticateAdmin, verifyHostController.detail);
 
 module.exports = router;

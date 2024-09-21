@@ -19,6 +19,19 @@ exports.listVerifyByPending = async () => {
     });
 }
 
+exports.listVerifyByApprove = async () => {
+  return await VerifyHost.findAll({
+      where: { verifyStatus: 'Approved' }
+  });
+}
+
+exports.listVerifyByRejected = async () => {
+  return await VerifyHost.findAll({
+      where: { verifyStatus: 'Rejected' }
+  });
+}
+
+
 exports.verifyByDetail = async (id) => {
     return await VerifyHost.findOne({
       where: { id },
