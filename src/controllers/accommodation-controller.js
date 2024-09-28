@@ -12,7 +12,6 @@ exports.createAccommodation = async (req, res, next) => {
             lat,
             long,
             description,
-            publish
         } = req.body;
         const { uid } = req.params;
 
@@ -25,7 +24,6 @@ exports.createAccommodation = async (req, res, next) => {
 
         const imgUrlArray = await Promise.all(imagexPromiseArray)
 
-
         const id = uuidv4().replace(/-/g, '');
         const accommodationData = {
             id,
@@ -35,7 +33,7 @@ exports.createAccommodation = async (req, res, next) => {
             lat,
             long,
             description,
-            publish: publish !== undefined ? publish : false,
+            publish: false,
             userId: uid,
         };
 
@@ -76,7 +74,7 @@ exports.listAccommodations = async (req, res, next) => {
 
 exports.updateAccommodation = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { hid } = req.params;
         const {
             name,
             type,
@@ -88,7 +86,7 @@ exports.updateAccommodation = async (req, res, next) => {
         } = req.body;
 
 
-        const accommodation = await accommodationService.findAccommodationById(id);
+        const accommodation = await accommodationService.findAccommodationById(hid);
         if (!accommodation) {
             return next(createError(404, "Accommodation not found"));
         }
@@ -112,7 +110,7 @@ exports.updateAccommodation = async (req, res, next) => {
             await accommodationService.uploadPhotosHost({ images: newImages, hostId: accommodation.id });
         }
 
-        await accommodationService.updateAccommodation(id, updatedData);
+        await accommodationService.updateAccommodation(hid, updatedData);
 
         res.status(200).json({
             message: "Accommodation updated successfully",
@@ -126,9 +124,9 @@ exports.updateAccommodation = async (req, res, next) => {
 
 exports.deleteAccommodation = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { hid } = req.params;
 
-        const accommodation = await accommodationService.findAccommodationForDelete(id);
+        const accommodation = await accommodationService.findAccommodationForDelete(hid);
         if (!accommodation) {
             throw createError(404, "Accommodation not found");
         }
@@ -136,8 +134,7 @@ exports.deleteAccommodation = async (req, res, next) => {
         if (accommodation.rooms.length > 0) {
             throw createError(409, "Cannot delete accommodation with rooms");
         }
-
-        await accommodationService.deleteAccommodationById(id);
+        await accommodationService.deleteAccommodationById(hid);
 
         res.status(200).json({
             status: "success",

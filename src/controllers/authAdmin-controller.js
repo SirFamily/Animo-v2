@@ -19,21 +19,21 @@ exports.register = async (req, res, next) => {
         }
 
         const adminId = uuidv4().replace(/-/g, '');
-        const hashedPassword = await bcrypt.hash(password, 10);
-        let url = '';
-
-        if (req.file) {
-            url = await cloudUpload(req.file.path);
-        }
+        
+        // let url = '';
+        // if (req.file) {
+        //     url = await cloudUpload(req.file.path);
+        // }
 
         await adminService.createAdmin({
             id: adminId,
             firstName,
             lastName,
             email,
-            password: hashedPassword,
+            password,
             phone,
-            url,
+            url : '',
+
         });
 
         res.status(201).json({ message: "Admin registered successfully" });
@@ -51,19 +51,12 @@ exports.login = async (req, res, next) => {
             throw createError(401, "Authentication failed! Wrong email or password");
         }
 
-        const isMatch = await bcrypt.compare(password, adminExist.password);
-        if (!isMatch) {
-            throw createError(401, "Invalid Password");
+        if (!adminExist || adminExist.password !== password) {
+            return res.status(401).json({message: "Wrong email or password"});
         }
 
-        const token = jwt.sign({ id: adminExist.id }, process.env.SECRET_KEY, { expiresIn: '1h', });
-        res.status(200).json({ message: "Login successful", token: token });
+        res.status(200).json({ message: "Login successful", data: adminExist });
     } catch (err) {
         next(err);
     }
 };
-
-exports.getad = async (req, res, next) => {
-    console.log(req.admin)
-    res.json(req.admin);
-}

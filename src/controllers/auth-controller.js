@@ -8,7 +8,6 @@ const cloudUpload = require("../utils/cloudUpload");
 exports.register = async (req, res, next) => {
     try {
         console.log('Request Body:', req.body);
-
         const {
             firstName, lastName, email, password, phone, birthday,
             address, subDistrict, district, province, postalCode, bio
@@ -18,7 +17,7 @@ exports.register = async (req, res, next) => {
         console.log('Password:', password);
 
         if (!email || !password) {
-            throw createError(400, 'Email and password are required');
+            return res.status(400).json({ message: 'Email and password are required' });
         }
 
         let url = '';
@@ -28,11 +27,11 @@ exports.register = async (req, res, next) => {
 
         const userExist = await userService.getUserByEmail(email);
         if (userExist) {
-            throw createError(409, 'Email already in use');
+            return res.status(409).json({ message: 'Email already in use' });
         }
 
         const userId = uuidv4().replace(/-/g, '');
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // const hashedPassword = await bcrypt.hash(password, 10) ลบ;
         const formattedBirthday = birthday ? new Date(birthday) : null;
 
         await userService.createUser({
@@ -40,7 +39,7 @@ exports.register = async (req, res, next) => {
             firstName,
             lastName,
             email,
-            password: hashedPassword,
+            password, //hashedPassword,ลบ
             phone,
             birthday: formattedBirthday,
             address,
@@ -58,25 +57,17 @@ exports.register = async (req, res, next) => {
     }
 };
 
-
 exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
         const userExist = await userService.getUserByEmail(email);
 
-        if (!userExist) {
-            throw createError(401, "Authentication failed! Wrong email or password");
+        if (!userExist || userExist.password !== password) {
+            return res.status(401).json({message: "Wrong email or password"});
         }
 
-        const isMatch = await bcrypt.compare(password, userExist.password);
-
-        if (!isMatch) {
-            throw createError(401, "Invalid Password");
-        }
-
-        const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY, { expiresIn: process.env.EXPIRES_IN });
-        res.status(200).json({ message: "login success", token: token });
+        res.status(200).json({ message: "login success",data: userExist});
     } catch (err) {
         next(err);
     }
@@ -90,7 +81,7 @@ exports.me = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
     try {
-        const { id } = req.user;
+        const { uid } = req.params;
         const {
             firstName,
             lastName,
@@ -106,7 +97,7 @@ exports.updateUser = async (req, res, next) => {
         } = req.body;
         console.log(birthday)
 
-        const user = await userService.findUserById(id);
+        const user = await userService.findUserById(uid);
 
         if (!user) {
             return next(createError(404, "User not found"));
@@ -131,8 +122,8 @@ exports.updateUser = async (req, res, next) => {
             bio: bio !== undefined ? bio : user.bio,
             url: url
         };
-        await userService.updateUser(id, updatedData);
-        const updatedUser = await userService.findUserById(id);
+        const test = await userService.updateUser(uid, updatedData);
+        const updatedUser = await userService.findUserById(uid);
 
         res.status(200).json({
             message: "User updated successfully",

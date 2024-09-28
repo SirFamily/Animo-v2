@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const hostController = require('../controllers/preview-host-controller');
-const authenticate = require('../middlewares/authenticate'); 
 
-router.get('/list', authenticate, hostController.listPublishedHost);
-router.get('/list/:hid', authenticate, hostController.listHostByID);
+router.get('/list/:uid', hostController.listPublishedHost);
+router.get('/get/:hid', hostController.listHostByID);
 
 module.exports = router;

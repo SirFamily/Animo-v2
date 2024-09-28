@@ -5,22 +5,11 @@ const featureService = require('../service/featureService');
 exports.createFeature = async (req, res, next) => {
     try {
         const { name, price } = req.body;
-
+        const { hid } = req.params; 
         if (!name || !price) {
             return next(createError(400, 'Name and price are required.'));
         }
 
-        const uid = req.user ? req.user.id : null;
-        if (!uid) {
-            return next(createError(401, 'Unauthorized access'));
-        }
-
-        const accommodation = await featureService.findAccommodationById(uid);
-        if (!accommodation) {
-            return next(createError(404, 'Accommodation not found.'));
-        }
-
-        const hid = accommodation.id;
         const newFeature = {
             name,
             price: parseFloat(price),
@@ -36,25 +25,26 @@ exports.createFeature = async (req, res, next) => {
 
 exports.getFeature = async (req, res, next) => {
     try {
-        const uid = req.user.id;
-        const accommodation = await featureService.findAccommodationById(uid);
+        const { hid } = req.params; 
+        // const uid = req.user.id;
+        // const accommodation = await featureService.findAccommodationById(uid);
+        // const { hid } = req.params; 
+        // if (!accommodation) {
+        //     return res.status(200).json({
+        //         status: 'Accommodation not found',
+        //         data: []
+        //     });
+        // }
 
-        if (!accommodation) {
-            return res.status(200).json({
-                status: 'Accommodation not found',
-                data: []
-            });
-        }
+        // const hostId = accommodation.id;
+        const features = await featureService.findFeatureByHostId(hid);
 
-        const hostId = accommodation.id;
-        const features = await featureService.findFeatureByHostId(hostId);
-
-        if (!features || features.length === 0) {
-            return res.status(200).json({
-                status: 'No features found for this host',
-                data: []
-            });
-        }
+        // if (!features || features.length === 0) {
+        //     return res.status(200).json({
+        //         status: 'No features found for this host',
+        //         data: []
+        //     });
+        // }
 
         res.status(200).json({ status: 'success', data: features });
     } catch (err) {

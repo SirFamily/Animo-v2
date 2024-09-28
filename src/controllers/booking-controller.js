@@ -3,7 +3,6 @@ const bookingService = require("../service/bookingService");
 const { v4: uuidv4 } = require("uuid");
 
 exports.createBooking = async (req, res, next) => {
-    const transaction = await bookingService.startTransaction(); // เริ่ม transaction
     try {
         const { hostId, roomId, userId, startDate, endDate, pets, paymentAmount, features } = req.body;
 
@@ -23,16 +22,15 @@ exports.createBooking = async (req, res, next) => {
         };
 
         // Create Booking Request
-        await bookingService.createBookingRequest(bookingData, transaction);
+        await bookingService.createBookingRequest(bookingData);
 
         // Insert Pets
         for (const pet of pets) {
             const petCountData = {
                 bookingId,
                 petId: pet.petId,
-                count: pet.count || 1, // สมมติว่าจำนวนสัตว์เลี้ยงเป็น 1 หากไม่ระบุ
             };
-            await bookingService.createPetCountBooking(petCountData, transaction);
+            await bookingService.createPetCountBooking(petCountData);
         }
 
         // Insert Payment
@@ -42,27 +40,24 @@ exports.createBooking = async (req, res, next) => {
             amount: parseFloat(paymentAmount),
             status: 'Pending'
         };
-        await bookingService.createPayment(paymentData, transaction);
+        await bookingService.createPayment(paymentData);
 
         // Insert Booking Features (New Addition)
         if (features && features.length > 0) {
-            for (const featureId of features) { // แก้ไขจาก feature.id เป็น featureId ตรงนี้
+            for (const featureId of features) { 
                 const bookingFeatureData = {
                     bookingId,
                     featureId, // ใช้ featureId โดยตรง
                 };
-                await bookingService.createBookingFeatures(bookingFeatureData, transaction);
+                await bookingService.createBookingFeatures(bookingFeatureData);
             }
         }
-
-        await transaction.commit();
 
         res.status(201).json({
             status: "success",
             bookingId,
         });
     } catch (err) {
-        await transaction.rollback();
         next(err);
     }
 };

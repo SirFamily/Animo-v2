@@ -3,7 +3,7 @@ const createError = require("../utils/createError");
 const petService = require("../service/petService");
 const { v4: uuidv4 } = require("uuid");
 
-exports.newpet = async (req, res, next) => {
+exports.addPet = async (req, res, next) => {
     try {
         const {
             petName,
@@ -55,13 +55,12 @@ exports.listpet = async (req, res, next) => {
     try {
         const { uid } = req.params;
         const data = await petService.listpets(uid);
-        
-        const petsData = data.map(pet => pet.get({ plain: true }));
-        
-        console.log(petsData);
+
+        // const petsData = data.map(pet => pet.get({ plain: true }));
+        // console.log(petsData);
         res.status(200).json({
             status: 'success',
-            data: petsData,
+            data: data,
         });
     } catch (err) {
         next(err);
@@ -87,7 +86,7 @@ exports.updatePet = async (req, res, next) => {
         console.log(id);
         console.log(req.body);
 
-        const pet = await petService.findPetById(id);
+        const pet = await petService.findPetById(pid);
 
         if (!pet) {
             return next(createError(404, "Pet not found"));
@@ -127,7 +126,7 @@ exports.deletePet = async (req, res, next) => {
     try {
         const { pid } = req.params;
         const id = pid
-        await petService.deletePetById(id);
+        await petService.deletePetById(pid);
         res.status(200).json({
             message: "Pet deleted successfully"
         });
@@ -136,15 +135,15 @@ exports.deletePet = async (req, res, next) => {
     }
 };
 
-exports.listPetByIdUser = async(req,res,next) =>{
-    try{
-        const { id } = req.user;
-        const pet = await petService.listPetByIdUser(id);
+exports.listPetByIdUser = async (req, res, next) => {
+    try {
+        const { uid } = req.params;
+        const pet = await petService.listPetByIdUser(uid);
         res.status(200).json({
             message: "Pet found successfully",
             pet: pet
-            });
-            } catch (err) {
-                next(err);
-                }
-                };
+        });
+    } catch (err) {
+        next(err);
+    }
+};

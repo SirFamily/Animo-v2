@@ -3,9 +3,9 @@ const verifyHostService = require("../service/verifyhostService");
 
 exports.updateVerification = async (req, res, next) => {
     try {
-        const { id } = req.params;   // Get ID from request params
-        const { newStatus } = req.body;   // Get newStatus from request body
-        const adminId = req.admin.id;  // Get adminId from request (assuming this is set in middleware)
+        const { id, adminId } = req.params;  
+        const { newStatus } = req.body;   
+
 
         if (!newStatus) {
             throw createError(400, "New status is required");

@@ -3,8 +3,8 @@ const createError = require('../utils/createError');
 
 exports.listRequestDetails = async (req, res, next) => {
     try {
-        const userId = req.user.id;
-        const requests = await RequestService.getBookingRequestsByUser(userId);
+        const { uid } = req.params;
+        const requests = await RequestService.getBookingRequestsByUser(uid);
         res.status(200).json({
             status: 'success',
             data: requests,
@@ -20,12 +20,12 @@ exports.getBookingRequestsDetailsById = async (req, res, next) => {
         const { reqId } = req.params;
         const requestDetails = await RequestService.getBookingRequestsDetailsById(reqId);
 
-        if (!requestDetails) {
-            return res.status(200).json({
-                status: 'Booking requestss not found',
-                data: []
-            });
-        }
+        // if (!requestDetails) {
+        //     return res.status(200).json({
+        //         status: 'Booking requestss not found',
+        //         data: []
+        //     });
+        // }
 
         res.status(200).json({
             status: 'success',
@@ -38,25 +38,25 @@ exports.getBookingRequestsDetailsById = async (req, res, next) => {
 
 exports.listRequestForOwner = async (req, res, next) => {
     try {
-        const userId = req.user.id;
-        const accommodation = await RequestService.findAccommodationByUserId(userId);
+        const { uid } = req.params;
+        const accommodation = await RequestService.findAccommodationByUserId(uid);
         
-        if (!accommodation) {
-            return res.status(200).json({
-                status: 'Accommodation not found',
-                data: []
-            });
-        }
+        // if (!accommodation) {
+        //     return res.status(200).json({
+        //         status: 'Accommodation not found',
+        //         data: []
+        //     });
+        // }
 
         const hostId = accommodation.id;
         const requests = await RequestService.getBookingRequestsByAccommodationId(hostId);
 
-        if (requests.length === 0) {
-            return res.status(200).json({
-                status: 'No booking requests found for this accommodation',
-                data: []
-            });
-        }
+        // if (requests.length === 0) {
+        //     return res.status(200).json({
+        //         status: 'No booking requests found for this accommodation',
+        //         data: []
+        //     });
+        // }
 
         res.status(200).json({
             status: 'success',

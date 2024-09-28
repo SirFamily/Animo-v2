@@ -13,6 +13,7 @@ exports.createRoom = async (req, res, next) => {
             supportPetName,  
             supportPetDescription 
         } = req.body;
+        const { hid } = req.params;
 
         if (!name || !quantity || !type || !price ) {
             return next(createError(400, 'Name, quantity, type, and price are required.'));
@@ -23,9 +24,9 @@ exports.createRoom = async (req, res, next) => {
 
         const images = imgUrlArray.map((imgUrl) => ({ url: imgUrl }));
 
-        const uid = req.user.id;
-        const accommodation = await roomService.findAccommodationById(uid);
-        const hid = accommodation.id;
+        // const uid = req.user.id;
+        // const accommodation = await roomService.findAccommodationById(uid);
+        // const hid = accommodation.id;
         const id = uuidv4().replace(/-/g, '');
 
         const roomData = {
@@ -60,8 +61,8 @@ exports.createRoom = async (req, res, next) => {
 
 exports.listRooms = async (req, res, next) => {
     try {
-        const { hostId } = req.params;
-        const data = await roomService.listRoomsWithImages(hostId);
+        const { hid } = req.params;
+        const data = await roomService.listRoomsWithImages(hid);
 
         res.status(200).json({
             status: 'success',
@@ -75,7 +76,7 @@ exports.listRooms = async (req, res, next) => {
 
 exports.updateRoom = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { rid } = req.params;
         const {
             name,
             quantity,
@@ -83,7 +84,7 @@ exports.updateRoom = async (req, res, next) => {
             price
         } = req.body;
 
-        const room = await roomService.findRoomById(id);
+        const room = await roomService.findRoomById(rid);
 
         if (!room) {
             return next(createError(404, "Room not found"));
@@ -96,9 +97,9 @@ exports.updateRoom = async (req, res, next) => {
             price: price !== undefined ? price : room.price
         };
 
-        await roomService.updateRoom(id, updatedData);
+        await roomService.updateRoom(rid, updatedData);
 
-        const updatedRoom = await roomService.findRoomById(id);
+        const updatedRoom = await roomService.findRoomById(rid);
 
         res.status(200).json({
             message: "Room updated successfully",
@@ -111,14 +112,14 @@ exports.updateRoom = async (req, res, next) => {
 
 exports.deleteRoom = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const room = await roomService.findRoomById(id);
+        const { rid } = req.params;
+        const room = await roomService.findRoomById(rid);
 
         if (!room) {
             return next(createError(404, "Room not found"));
         }
 
-        await roomService.deleteRoomById(id);
+        await roomService.deleteRoomById(rid);
         res.status(200).json({
             message: "Room deleted successfully"
         });
