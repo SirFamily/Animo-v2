@@ -16,12 +16,14 @@ exports.addPet = async (req, res, next) => {
             petHistory,
         } = req.body;
         const { uid } = req.params;
+        
+        console.log(req.file)
 
         if (!petName || !species || !uid) {
             return next(createError(400, 'Pet name, animal type, and user ID are required.'));
         }
-
-        let url = '';
+        
+        let url = null;
         if (req.file) {
             url = await cloudUpload(req.file.path);
         }
@@ -39,7 +41,7 @@ exports.addPet = async (req, res, next) => {
             petHistory,
             userId: uid,
         };
-        console.log(req.body)
+
 
         await petService.newpets(petData);
         res.status(201).json({
@@ -56,8 +58,6 @@ exports.listpet = async (req, res, next) => {
         const { uid } = req.params;
         const data = await petService.listpets(uid);
 
-        // const petsData = data.map(pet => pet.get({ plain: true }));
-        // console.log(petsData);
         res.status(200).json({
             status: 'success',
             data: data,
@@ -125,7 +125,6 @@ exports.updatePet = async (req, res, next) => {
 exports.deletePet = async (req, res, next) => {
     try {
         const { pid } = req.params;
-        const id = pid
         await petService.deletePetById(pid);
         res.status(200).json({
             message: "Pet deleted successfully"

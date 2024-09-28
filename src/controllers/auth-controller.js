@@ -1,8 +1,6 @@
 const createError = require("../utils/createError");
-const bcrypt = require('bcryptjs');
 const userService = require("../service/userService");
 const { v4: uuidv4 } = require("uuid");
-const jwt = require("jsonwebtoken");
 const cloudUpload = require("../utils/cloudUpload");
 
 exports.register = async (req, res, next) => {
@@ -20,7 +18,7 @@ exports.register = async (req, res, next) => {
             return res.status(400).json({ message: 'Email and password are required' });
         }
 
-        let url = '';
+        let url = null;
         if (req.file) {
             url = await cloudUpload(req.file.path);
         }
@@ -31,7 +29,6 @@ exports.register = async (req, res, next) => {
         }
 
         const userId = uuidv4().replace(/-/g, '');
-        // const hashedPassword = await bcrypt.hash(password, 10) ลบ;
         const formattedBirthday = birthday ? new Date(birthday) : null;
 
         await userService.createUser({
