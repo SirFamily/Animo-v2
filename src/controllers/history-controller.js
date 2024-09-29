@@ -1,15 +1,12 @@
 const HistoryService = require('../service/HistoryService');
-const createError = require('../utils/createError');
 
 exports.listHistory = async (req, res, next) => {
     try {
         const { uid } = req.params;
         const history = await HistoryService.getBookingRequestsByUser(uid);
 
-        // Fetch accommodation by user ID
         const accommodation = await HistoryService.findAccommodationByUserId(uid);
 
-        // Check if accommodation exists before accessing its properties
         let historyowner = null;
         if (accommodation) {
             const hostId = accommodation.id;

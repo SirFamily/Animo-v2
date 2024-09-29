@@ -1,13 +1,13 @@
 const { v4: uuidv4 } = require('uuid');
-const createError = require('../utils/createError');
 const featureService = require('../service/featureService');
 
 exports.createFeature = async (req, res, next) => {
     try {
         const { name, price } = req.body;
         const { hid } = req.params; 
+
         if (!name || !price) {
-            return next(createError(400, 'Name and price are required.'));
+            return res.status(400).json({ message: 'Name and price are required.' });
         }
 
         const newFeature = {
@@ -26,25 +26,8 @@ exports.createFeature = async (req, res, next) => {
 exports.getFeature = async (req, res, next) => {
     try {
         const { hid } = req.params; 
-        // const uid = req.user.id;
-        // const accommodation = await featureService.findAccommodationById(uid);
-        // const { hid } = req.params; 
-        // if (!accommodation) {
-        //     return res.status(200).json({
-        //         status: 'Accommodation not found',
-        //         data: []
-        //     });
-        // }
 
-        // const hostId = accommodation.id;
         const features = await featureService.findFeatureByHostId(hid);
-
-        // if (!features || features.length === 0) {
-        //     return res.status(200).json({
-        //         status: 'No features found for this host',
-        //         data: []
-        //     });
-        // }
 
         res.status(200).json({ status: 'success', data: features });
     } catch (err) {
@@ -60,7 +43,7 @@ exports.updateFeature = async (req, res, next) => {
         const feature = await featureService.findFeatureById(fid);
 
         if (!feature) {
-            return next(createError(404, 'Feature not found.'));
+            return res.status(404).json({ message: 'Feature not found.' });
         }
 
         const updatedData = {
@@ -70,8 +53,6 @@ exports.updateFeature = async (req, res, next) => {
         };
 
         await featureService.updateFeature(fid, updatedData);
-
-        const updatedFeature = await featureService.findFeatureById(fid);
 
         res.status(200).json({ 
             status: 'success', 

@@ -1,5 +1,4 @@
 const cloudUpload = require("../utils/cloudUpload");
-const createError = require("../utils/createError");
 const petService = require("../service/petService");
 const { v4: uuidv4 } = require("uuid");
 
@@ -17,10 +16,10 @@ exports.addPet = async (req, res, next) => {
         } = req.body;
         const { uid } = req.params;
         
-        console.log(req.file)
+        console.log(req.file);
 
         if (!petName || !species || !uid) {
-            return next(createError(400, 'Pet name, animal type, and user ID are required.'));
+            return res.status(400).json({ message: 'Pet name, animal type, and user ID are required.' });
         }
         
         let url = null;
@@ -42,16 +41,14 @@ exports.addPet = async (req, res, next) => {
             userId: uid,
         };
 
-
         await petService.newpets(petData);
         res.status(201).json({
             status: 'success',
         });
     } catch (err) {
-        next(err)
+        next(err);
     }
 };
-
 
 exports.listpet = async (req, res, next) => {
     try {
@@ -67,8 +64,6 @@ exports.listpet = async (req, res, next) => {
     }
 };
 
-
-
 exports.updatePet = async (req, res, next) => {
     try {
         const { pid } = req.params;
@@ -82,14 +77,11 @@ exports.updatePet = async (req, res, next) => {
             birthday,
             petHistory,
         } = req.body;
-        const id = pid
-        console.log(id);
-        console.log(req.body);
 
         const pet = await petService.findPetById(pid);
 
         if (!pet) {
-            return next(createError(404, "Pet not found"));
+            return res.status(404).json({ message: "Pet not found" });
         }
 
         let url = pet.url;
@@ -104,13 +96,13 @@ exports.updatePet = async (req, res, next) => {
             weight: weight !== undefined ? parseFloat(weight) : pet.weight,
             height: height !== undefined ? parseFloat(height) : pet.height,
             gender: gender !== undefined ? gender : pet.gender,
-            birthday: birthday ? new Date(birthday).toISOString().slice(0, 19).replace('T', ' ') : null,
+            birthday: birthday !== undefined ? new Date(birthday) : pet.birthday,
             url: url,
             petHistory: petHistory !== undefined ? petHistory : pet.petHistory,
         };
 
-        await petService.updatePet(id, updatedData);
-        const updatedPet = await petService.findPetById(id);
+        await petService.updatePet(pid, updatedData);
+        const updatedPet = await petService.findPetById(pid);
 
         res.status(200).json({
             message: "Pet updated successfully",
@@ -120,7 +112,6 @@ exports.updatePet = async (req, res, next) => {
         next(err);
     }
 };
-
 
 exports.deletePet = async (req, res, next) => {
     try {

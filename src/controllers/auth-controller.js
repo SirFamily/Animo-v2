@@ -1,18 +1,13 @@
-const createError = require("../utils/createError");
 const userService = require("../service/userService");
 const { v4: uuidv4 } = require("uuid");
 const cloudUpload = require("../utils/cloudUpload");
 
 exports.register = async (req, res, next) => {
     try {
-        console.log('Request Body:', req.body);
         const {
             firstName, lastName, email, password, phone, birthday,
             address, subDistrict, district, province, postalCode, bio
         } = req.body;
-
-        console.log('Email:', email);
-        console.log('Password:', password);
 
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required' });
@@ -36,7 +31,7 @@ exports.register = async (req, res, next) => {
             firstName,
             lastName,
             email,
-            password, //hashedPassword,ลบ
+            password,
             phone,
             birthday: formattedBirthday,
             address,
@@ -61,20 +56,14 @@ exports.login = async (req, res, next) => {
         const userExist = await userService.getUserByEmail(email);
 
         if (!userExist || userExist.password !== password) {
-            return res.status(401).json({message: "Wrong email or password"});
+            return res.status(401).json({ message: "Wrong email or password" });
         }
 
-        res.status(200).json({ message: "login success",data: userExist});
+        res.status(200).json({ message: "login success", data: userExist });
     } catch (err) {
         next(err);
     }
-}
-
-exports.me = async (req, res, next) => {
-    console.log(req.user)
-    res.json(req.user);
-}
-
+};
 
 exports.updateUser = async (req, res, next) => {
     try {
@@ -92,19 +81,18 @@ exports.updateUser = async (req, res, next) => {
             postalCode,
             bio
         } = req.body;
-        console.log(birthday)
 
         const user = await userService.findUserById(uid);
 
         if (!user) {
-            return next(createError(404, "User not found"));
+            return res.status(404).json({ message: "User not found" });
         }
 
         let url = user.url;
         if (req.file) {
             url = await cloudUpload(req.file.path);
         }
-  
+
         const updatedData = {
             firstName: firstName !== undefined ? firstName : user.firstName,
             lastName: lastName !== undefined ? lastName : user.lastName,
@@ -119,7 +107,7 @@ exports.updateUser = async (req, res, next) => {
             bio: bio !== undefined ? bio : user.bio,
             url: url
         };
-        const test = await userService.updateUser(uid, updatedData);
+        await userService.updateUser(uid, updatedData);
         const updatedUser = await userService.findUserById(uid);
 
         res.status(200).json({

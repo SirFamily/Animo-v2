@@ -1,4 +1,3 @@
-const createError = require("../utils/createError");
 const adminService = require("../service/adminService");
 const { v4: uuidv4 } = require("uuid");
 
@@ -7,20 +6,15 @@ exports.register = async (req, res, next) => {
         const { firstName, lastName, email, password, phone } = req.body;
 
         if (!email || !password) {
-            throw createError(400, 'Email and password are required');
+            return res.status(400).json({ message: 'Email and password are required' });
         }
 
         const adminExist = await adminService.getAdminByEmail(email);
         if (adminExist) {
-            throw createError(409, 'Email already in use');
+            return res.status(409).json({ message: 'Email already in use' });
         }
 
         const adminId = uuidv4().replace(/-/g, '');
-        
-        // let url = '';
-        // if (req.file) {
-        //     url = await cloudUpload(req.file.path);
-        // }
 
         await adminService.createAdmin({
             id: adminId,
@@ -29,8 +23,7 @@ exports.register = async (req, res, next) => {
             email,
             password,
             phone,
-            url : '',
-
+            url: '',
         });
 
         res.status(201).json({ message: "Admin registered successfully" });
@@ -44,12 +37,8 @@ exports.login = async (req, res, next) => {
         const { email, password } = req.body;
 
         const adminExist = await adminService.getAdminByEmail(email);
-        if (!adminExist) {
-            throw createError(401, "Authentication failed! Wrong email or password");
-        }
-
         if (!adminExist || adminExist.password !== password) {
-            return res.status(401).json({message: "Wrong email or password"});
+            return res.status(401).json({ message: "Wrong email or password" });
         }
 
         res.status(200).json({ message: "Login successful", data: adminExist });

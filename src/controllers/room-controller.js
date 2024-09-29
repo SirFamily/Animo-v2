@@ -1,4 +1,3 @@
-const createError = require("../utils/createError");
 const roomService = require("../service/roomService");
 const { v4: uuidv4 } = require("uuid");
 const cloudUpload = require("../utils/cloudUpload");
@@ -15,8 +14,8 @@ exports.createRoom = async (req, res, next) => {
         } = req.body;
         const { hid } = req.params;
 
-        if (!name || !quantity || !type || !price ) {
-            return next(createError(400, 'Name, quantity, type, and price are required.'));
+        if (!name || !quantity || !type || !price) {
+            return res.status(400).json({ message: 'Name, quantity, type, and price are required.' });
         }
 
         const imagexPromiseArray = req.files.map((file) => cloudUpload(file.path));
@@ -24,9 +23,6 @@ exports.createRoom = async (req, res, next) => {
 
         const images = imgUrlArray.map((imgUrl) => ({ url: imgUrl }));
 
-        // const uid = req.user.id;
-        // const accommodation = await roomService.findAccommodationById(uid);
-        // const hid = accommodation.id;
         const id = uuidv4().replace(/-/g, '');
 
         const roomData = {
@@ -73,7 +69,6 @@ exports.listRooms = async (req, res, next) => {
     }
 };
 
-
 exports.updateRoom = async (req, res, next) => {
     try {
         const { rid } = req.params;
@@ -87,7 +82,7 @@ exports.updateRoom = async (req, res, next) => {
         const room = await roomService.findRoomById(rid);
 
         if (!room) {
-            return next(createError(404, "Room not found"));
+            return res.status(404).json({ message: "Room not found" });
         }
 
         const updatedData = {
@@ -116,7 +111,7 @@ exports.deleteRoom = async (req, res, next) => {
         const room = await roomService.findRoomById(rid);
 
         if (!room) {
-            return next(createError(404, "Room not found"));
+            return res.status(404).json({ message: "Room not found" });
         }
 
         await roomService.deleteRoomById(rid);

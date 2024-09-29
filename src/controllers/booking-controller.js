@@ -1,4 +1,3 @@
-const createError = require("../utils/createError");
 const bookingService = require("../service/bookingService");
 const { v4: uuidv4 } = require("uuid");
 
@@ -7,10 +6,10 @@ exports.createBooking = async (req, res, next) => {
         const { hostId, roomId, userId, startDate, endDate, pets, paymentAmount, features } = req.body;
 
         if (!hostId || !roomId || !userId || !startDate || !endDate || !paymentAmount || !pets || pets.length === 0) {
-            return next(createError(400, "Missing required booking details."));
+            return res.status(400).json({ message: "Missing required booking details." });
         }
 
-        const bookingId = uuidv4().replace(/-/g, '');  
+        const bookingId = uuidv4().replace(/-/g, '');
 
         const bookingData = {
             id: bookingId,
@@ -35,7 +34,7 @@ exports.createBooking = async (req, res, next) => {
 
         // Insert Payment
         const paymentData = {
-            id: uuidv4().replace(/-/g, ''),  
+            id: uuidv4().replace(/-/g, ''),
             bookingId,
             amount: parseFloat(paymentAmount),
             status: 'Pending'
@@ -44,10 +43,10 @@ exports.createBooking = async (req, res, next) => {
 
         // Insert Booking Features (New Addition)
         if (features && features.length > 0) {
-            for (const featureId of features) { 
+            for (const featureId of features) {
                 const bookingFeatureData = {
                     bookingId,
-                    featureId, // ใช้ featureId โดยตรง
+                    featureId,
                 };
                 await bookingService.createBookingFeatures(bookingFeatureData);
             }

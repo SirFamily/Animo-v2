@@ -1,4 +1,3 @@
-const createError = require("../utils/createError");
 const verifyHostService = require("../service/verifyhostService");
 
 exports.updateVerification = async (req, res, next) => {
@@ -6,12 +5,10 @@ exports.updateVerification = async (req, res, next) => {
         const { id, adminId } = req.params;  
         const { newStatus } = req.body;   
 
-
         if (!newStatus) {
-            throw createError(400, "New status is required");
+            return res.status(400).json({ message: "New status is required" });
         }
 
-        // Ensure that you pass an object with the required fields
         const updatedRecord = await verifyHostService.updateVerificationStatus({ id, adminId, newStatus });
 
         res.status(200).json({
@@ -22,8 +19,6 @@ exports.updateVerification = async (req, res, next) => {
         next(error);
     }
 };
-
-
 
 exports.listPending = async (req, res, next) => {
     try {
@@ -67,7 +62,7 @@ exports.detail = async (req, res, next) => {
 
         const detail = await verifyHostService.verifyByDetail(id);
         res.status(200).json({
-            message: "detail of verifications retrieved successfully",
+            message: "Detail of verifications retrieved successfully",
             data: detail,
         });
     } catch (error) {
