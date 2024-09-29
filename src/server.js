@@ -4,7 +4,6 @@ const cors = require('cors');
 const app = express();
 const db = require('./db/index.js');
 
-const errorHandler = require("./middlewares/error");
 const notFoundHandler = require("./middlewares/notFound");
 
 const authRoute = require("./routers/auth-route");
@@ -59,7 +58,6 @@ app.use("/request", requestRoute);
 app.use("/history", historyRoute);
 app.use("/verify", verify)
 app.use("*", notFoundHandler);
-app.use(errorHandler);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () => {
