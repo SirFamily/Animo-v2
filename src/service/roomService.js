@@ -57,9 +57,9 @@ exports.getPhotosByRoomId = async (roomId) => {
     });
 };
 
-exports.listRoomsWithImages = async (hostId) => {
+exports.listRoomsWithImages = async (hid) => {
     return Room.findAll({
-        where: { host_id: hostId },
+        where: { host_id: hid },
         include: [
             {
                 model: PhotosRoom,

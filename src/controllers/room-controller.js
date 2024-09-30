@@ -59,7 +59,7 @@ exports.listRooms = async (req, res, next) => {
     try {
         const { hid } = req.params;
 
-        const data = await roomService.listRoomsWithImages({hostId:hid});
+        const data = await roomService.listRoomsWithImages(hid);
 
         res.status(200).json({
             status: 'success',
