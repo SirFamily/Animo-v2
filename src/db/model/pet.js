@@ -6,7 +6,6 @@ module.exports = (sequelize, Sequelize) => {
           petName: { type: Sequelize.STRING(30), allowNull: false, field: 'pet_name' },
           species: { type: Sequelize.STRING(20), allowNull: false, field: 'species' },
           breed: { type: Sequelize.STRING(30), field: 'breed' },
-         //  อย่าลืมไปแก้เล่ยส่วนของประเภท
           weight: { type: Sequelize.DECIMAL(5,2), field: 'weight' },
           height: { type: Sequelize.DECIMAL(5,2), field: 'height' },
           gender: { type: Sequelize.STRING(10), field: 'gender' },
