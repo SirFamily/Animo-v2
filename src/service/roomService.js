@@ -69,7 +69,7 @@ exports.listRoomsWithImages = async (hid) => {
             {
                 model: SupportPet,
                 as: 'supportPets',
-                attributes: ['id', 'name', 'description'] 
+                attributes: ['id', 'name'] 
             }
         ]
     });
