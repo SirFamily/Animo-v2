@@ -27,7 +27,7 @@ exports.listPublishedHosts = async (userId) => {
                     {
                         model: SupportPet,
                         as: 'supportPets',
-                        attributes: ['id', 'name', 'description']
+                        attributes: ['id', 'name']
                     }
                 ]
             },
@@ -62,7 +62,7 @@ exports.listHostByID = async (hid) => {
                     {
                         model: SupportPet,
                         as: 'supportPets',
-                        attributes: ['id', 'name', 'description']
+                        attributes: ['id', 'name']
                     }
                 ]
             },
