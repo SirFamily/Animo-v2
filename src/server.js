@@ -18,17 +18,6 @@ const historyRoute = require("./routers/history-routes.js");
 const adminRoute = require("./routers/authAdmin-route.js");
 const verify = require("./routers/verifyhost-route.js")
 
-
-const cre = `░█▀▀░█▀▄░█▀▀░█▀█░▀█▀░█▀▀░█▀▄░░░█▀▄░█░█
-░█░░░█▀▄░█▀▀░█▀█░░█░░█▀▀░█░█░░░█▀▄░░█░
-░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀▀░░░░▀▀░░░▀░`;
-const str = `░█▀▀░▀█▀░█▀▄░█▀▀░█▀█░█▄█░▀█▀░█░░░█░█
-░▀▀█░░█░░█▀▄░█▀▀░█▀█░█░█░░█░░█░░░░█░
-░▀▀▀░▀▀▀░▀░▀░▀░░░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░`;
-const line = `░▀▄░░▀▄░░▀▄░░▀▄░░▀▄░░░▄▀░░▄▀░░▄▀░░▄▀░░▄▀
-░░▄▀░░▄▀░░▄▀░░▄▀░░▄▀░▀▄░░▀▄░░▀▄░░▀▄░░▀▄░
-░▀░░░▀░░░▀░░░▀░░░▀░░░░░▀░░░▀░░░▀░░░▀░░░▀`;
-
 db.sequelize.sync({ force: false });
 console.log('The table for the User model was just (re)created!');
 
@@ -36,7 +25,7 @@ console.log('The table for the User model was just (re)created!');
 // setTimeout(() => {
 //   db.sequelize.sync({ force: false })
 //     .then(() => {
-//       console.log('The table for the User model was just (re)created!');
+//       console.log('Connection has been established successfully');
 //     })
 //     .catch(err => {
 //       console.error('Unable to connect to the database:', err);
@@ -61,10 +50,6 @@ app.use("*", notFoundHandler);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () => {
-  console.log(line);
-  console.log(cre);
-  console.log(str);
-  console.log(line);
   console.log("----------------------------------------");
   console.log("  Server Run On http://localhost:" + port);
   console.log("----------------------------------------");

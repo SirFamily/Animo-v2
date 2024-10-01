@@ -23,7 +23,6 @@ exports.register = async (req, res, next) => {
             email,
             password,
             phone,
-            url: '',
         });
 
         res.status(201).json({ message: "Admin registered successfully" });
