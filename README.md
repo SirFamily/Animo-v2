@@ -1,5 +1,11 @@
-เครื่องช่วยจำ
+PORT=8112
 
-1 อย่าลืมไปเปลี่ยนในเล่มรายงาน id ของ photoshost และ photosroom ไม่เอา uuidแล้ว (ยังไม่แก้)
-
-2. จะแก้ จาก extraFeatures เป็น Amenities
+NAME_DB=animodb01
+USER_DB=root
+PASS_DB=448518
+IP_DB=localhost
+PORT_DB=3306
+DIALECT_DB=mysql
+SECRET_KEY=
+EXPIRES_IN=1d
+CLOUDINARY_SECRET=
